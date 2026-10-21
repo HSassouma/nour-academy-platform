@@ -28,10 +28,6 @@
   --color-primary-950: #091638;
 }
 
-:root {
-  /* same variables as before, unchanged */
-}
-
 body {
   font-family: "Poppins", sans-serif;
   color: var(--color-text);

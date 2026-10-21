@@ -1,4 +1,4 @@
-import { CardMaker } from "./components.js";
+import { CardMaker, PanierItemMaker } from "./components.js";
 
 // ----------- Filter the courses --------------
 const container = document.getElementById("container-cards");
@@ -60,3 +60,26 @@ function SetCources(state) {
 }
 
 SetCources(state);
+
+// ----------- Panier controll --------------
+const panierContainer = document.getElementById("container-panier");
+const buttonsAddToPanier = document.querySelectorAll("#button-add-to-panier");
+
+let coursesObj = {};
+for (let course of dataFixed) {
+    coursesObj[course.id] = course;
+}
+
+for (let btn of buttonsAddToPanier) {
+    btn.addEventListener("click", (e) => {
+        addToPanier(coursesObj[e.currentTarget.value]);
+    });
+}
+
+function addToPanier(course) {
+    let div = document.createElement("div");
+    div.innerHTML = PanierItemMaker(course)
+    panierContainer.append(div.firstElementChild);
+}
+
+// -----------  --------------
