@@ -7,21 +7,90 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>nour-academy</title>
     <link rel="stylesheet" href="./src/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css"
+        integrity="sha512-QeR2VH+lsBE5LSAe1Q5EnTBbe7XTBubt8dG93Y7gidSgdMCr8nVqKcfKAMyN96SV8KDbZVTDXChatu5G2KQGzg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
 </head>
 
 <body>
-    <header class="flex h-[18vh] px-5 py-3 bg-bg">
+    <header class="flex justify-between h-[14vh] px-[4%] py-3  bg-bg">
         <img src="./src/assets/logo.png" alt="Logo image" loading="lazy">
+        <nav class="flex items-center gap-4 text-3xl">
+            <a href=""><i class="fa-solid fa-bell"></i></a>
+            <a href=""><i class="fa-solid fa-circle-user text-4xl"></i></a>
+        </nav>
     </header>
-    <main class="h-auto p-4 bg-bg flex justify-center lg:start">
-        <div class="flex flex-col gap-4 items-center w-[90%]">
-            <h1 class="self-start pb-3 text-3xl font-">Trouvez le bon cours pour votre enfant, inscrivez-le en quelques minutes.</h1>
-            <div id="container-cards" class="gap-4 flex flex-col md:flex-row md:flex-wrap">
+    <main class="h-auto py-6 px-[5%] bg-bg flex-col justify-center lg:start">
+        <h1 class="self-start pb-6 text-3xl font-semibold text-text">Trouvez le bon cours pour votre enfant,
+            inscrivez-le en quelques minutes.</h1>
+        <!-- filtres -->
+        <section class="flex flex-col gap-4 pb-6 md:flex-row">
+            <div class="flex flex-col gap-1">
+                <label for="filter-niveau" class="text-text">
+                    <i class="fa-solid fa-graduation-cap mr-2" aria-hidden="true"></i>Niveau
+                </label>
+                <select id="filter-niveau" autocomplete="off" class="rounded-lg border border-black bg-white px-4 py-3">
+                    <option value="">Tous les niveaux</option>
+                    <option value="Primaire">Primaire</option>
+                    <option value="Collège">Collège</option>
+                    <option value="Lycée">Lycée</option>
+                    <option value="Bac">Bac</option>
+                </select>
+            </div>
 
+            <div class="flex flex-col gap-1">
+                <label for="filter-matiere" class="text-text">
+                    <i class="fa-solid fa-book-open mr-2" aria-hidden="true"></i>Matière
+                </label>
+                <select id="filter-matiere" autocomplete="off" class="rounded-lg border border-black bg-white px-4 py-3">
+                    <option value="">Toutes les matières</option>
+                    <option value="Maths">Maths</option>
+                    <option value="Physique">Physique</option>
+                    <option value="SVT">SVT</option>
+                    <option value="Français">Français</option>
+                    <option value="Anglais">Anglais</option>
+                    <option value="Espagnol">Espagnol</option>
+                    <option value="Informatique">Informatique</option>
+                    <option value="Robotique">Robotique</option>
+                    <option value="Bac">Préparation au Bac</option>
+                </select>
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <label for="search" class="text-text">
+                    <i class="fa-solid fa-magnifying-glass mr-2" aria-hidden="true"></i>Recherche
+                </label>
+                <input id="filter-search" autocomplete="off" type="search" placeholder="Ex : Maths ..."
+                    class="rounded-lg border border-black bg-white px-4 py-3" />
+            </div>
+        </section>
+        <div class="flex flex-col justify-between md:flex-row">
+            <div id="container-cards" class="gap-6 min-w-[48%] flex pb-6 flex-col md:flex-row md:flex-wrap md:w-[68%]">
+            </div>
+
+            <!-- panier -->
+            <div id="panier"
+                class="w-full sticky top-6 rounded-xl border border-black h-fit bg-white p-6 shadow-sm md:w-[28%]">
+                <div class="mb-6 flex items-center justify-between">
+                    <h2 class="text-xl font-semibold text-text">Mon panier</h2>
+                    <span id="panier-count"
+                        class="flex h-7 w-7 items-center justify-center rounded-full bg-primary-100 text-sm font-medium text-primary-700">0</span>
+                </div>
+                <div id="panier-items" class="flex flex-col gap-3">
+                    <p class="text-sm text-text-subtle">Aucun cours sélectionné.</p>
+                </div>
+                <div class="w-full mt-6 border-t border-gray-200 pt-4">
+                    <div class="mb-4 flex items-center justify-between">
+                        <span class="text-text-muted">Total / mois</span>
+                        <span id="panier-total" class="text-xl font-bold text-text">0 MAD</span>
+                    </div>
+                    <button id="panier-checkout"
+                        class="rounded-lg bg-primary-600 px-4 py-3 font-semibold text-white transition hover:bg-primary-700 hover:cursor-pointer">
+                        Continuer l'inscription
+                    </button>
+                </div>
             </div>
         </div>
-        <!-- panier -->
-        <div class="h-50 bg-red-700 w-3xs"></div>
     </main>
     <footer></footer>
     <script type="module" src="/src/main.js"></script>
