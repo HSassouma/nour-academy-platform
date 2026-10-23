@@ -1,4 +1,4 @@
-import { CardMaker, PanierItemMaker } from "./components.js";
+import { CardMaker, PanierItemMaker, ModalCourseMaker } from "./components.js";
 
 // ----------- Filter the courses --------------
 const container = document.getElementById("container-cards");
@@ -49,7 +49,12 @@ function SetCources(state) {
     for (let v of cardsData) {
         const div = document.createElement("div");
         div.innerHTML = CardMaker(v);
-        container.appendChild(div.firstElementChild);
+        const card = div.firstElementChild;
+
+        card.querySelector(`#button-plus-details-${v.id}`).addEventListener("click", () => openModal(v));
+        card.querySelector(`#button-add-to-panier-${v.id}`).addEventListener("click", () => addToPanier(v));
+
+        container.appendChild(card);
     }
     
     if (cardsData.length <= 0) {
@@ -63,23 +68,40 @@ SetCources(state);
 
 // ----------- Panier controll --------------
 const panierContainer = document.getElementById("container-panier");
-const buttonsAddToPanier = document.querySelectorAll("#button-add-to-panier");
-
-let coursesObj = {};
-for (let course of dataFixed) {
-    coursesObj[course.id] = course;
-}
-
-for (let btn of buttonsAddToPanier) {
-    btn.addEventListener("click", (e) => {
-        addToPanier(coursesObj[e.currentTarget.value]);
-    });
-}
 
 function addToPanier(course) {
     let div = document.createElement("div");
     div.innerHTML = PanierItemMaker(course)
-    panierContainer.append(div.firstElementChild);
+    const panierItem = div.firstElementChild;
+    panierContainer.append(panierItem);
+
+    const deleteButton = panierItem.querySelector(`#delete-button-${course.id}`);
+    deleteButton.addEventListener("click", () => {
+        panierItem.remove();
+    });
 }
 
-// -----------  --------------
+// ----------- More details modal --------------
+function openModal(course) {
+    const div = document.createElement("div");
+    div.innerHTML = ModalCourseMaker(course);
+    const overlay = div.firstElementChild;
+    document.body.append(overlay);
+    document.body.classList.add("overflow-hidden");
+
+    const closeModal = () => {
+        overlay.remove();
+        document.body.classList.remove("overflow-hidden");
+        document.removeEventListener("keydown", onKeyDown);
+    };
+
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeModal();
+    });
+
+    overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) closeModal();
+    });
+    
+    overlay.querySelector("#modal-close").addEventListener("click", closeModal);
+}
