@@ -102,3 +102,70 @@ export function ModalCourseMaker(course) {
     </div>
 </div>`;
 }
+export function CheckoutModalMaker() {
+    return `<div id="checkout-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/30 p-2 sm:p-4">
+    <div class="relative max-h-[95vh] w-full max-w-xl overflow-y-auto rounded-2xl bg-white p-4 shadow-2xl sm:max-h-[90vh] sm:p-6 md:p-8">
+        <button id="checkout-close" type="button" aria-label="Fermer"
+            class="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-primary-100 text-primary-700 hover:bg-primary-200">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <form id="checkout-form" novalidate class="flex flex-col gap-3">
+            <div class="flex flex-col gap-1 pr-12">
+                <h2 class="text-xl font-semibold text-text sm:text-2xl">Inscription</h2>
+                <p class="text-sm text-text-muted">Étape 1/2</p>
+            </div>
+            <div class="flex items-center gap-2">
+                <div class="progress-bar h-2 flex-1 rounded-full bg-primary-600"></div>
+                <div class="progress-bar h-2 flex-1 rounded-full bg-gray-200"></div>
+            </div>
+
+            <input id="checkout-parent" type="text" placeholder="Nom du parent" class="rounded-lg border border-black px-3 py-2" />
+            <input id="checkout-email" type="email" placeholder="Email" class="rounded-lg border border-black px-3 py-2" />
+            <input id="checkout-phone" type="tel" placeholder="06XXXXXXXX ou +2126XXXXXXX" class="rounded-lg border border-black px-3 py-2" />
+            <input id="checkout-student" type="text" placeholder="Prénom de l'élève" class="rounded-lg border border-black px-3 py-2" />
+            <select id="checkout-level" class="rounded-lg border border-black px-3 py-2">
+                <option value="">Niveau de l'élève</option>
+                <option value="Primaire">Primaire</option>
+                <option value="Collège">Collège</option>
+                <option value="Lycée">Lycée</option>
+                <option value="Bac">Bac</option>
+            </select>
+            <input id="checkout-password" type="password" placeholder="Mot de passe" class="rounded-lg border border-black px-3 py-2" />
+            <input id="checkout-confirm" type="password" placeholder="Confirmation" class="rounded-lg border border-black px-3 py-2" />
+
+            <label class="flex items-start gap-2 text-sm text-text">
+                <input id="checkout-consent" type="checkbox" class="mt-1" />
+                <span>J'accepte le consentement</span>
+            </label>
+
+            <p id="checkout-error" class="hidden text-sm text-red-600"></p>
+
+            <button type="submit" class="rounded-lg bg-primary-600 px-4 py-2 font-semibold text-white hover:bg-primary-700">Suivant</button>
+        </form>
+
+        <div id="checkout-recap" class="hidden flex-col gap-4"></div>
+    </div>
+</div>`;
+}
+
+export function CheckoutRecapMaker(data) {
+    const courses = data.courses.map(c => `<li class="text-sm text-text-muted">${c.subject} - ${c.price} MAD</li>`).join("");
+    return `<div class="flex flex-col gap-3">
+    <div class="flex flex-col gap-1 pr-12">
+        <h2 class="text-xl font-semibold text-text sm:text-2xl">Récapitulatif</h2>
+        <p class="text-sm text-text-muted">Étape 2/2</p>
+    </div>
+    <div class="flex items-center gap-2">
+        <div class="progress-bar h-2 flex-1 rounded-full bg-green-500"></div>
+        <div class="progress-bar h-2 flex-1 rounded-full bg-primary-600"></div>
+    </div>
+    <p class="text-sm">Dossier: <b>${data.dossier}</b></p>
+    <p class="text-sm">Parent: ${data.parent}</p>
+    <p class="text-sm">Email: ${data.email}</p>
+    <p class="text-sm">Élève: ${data.student} (${data.level})</p>
+    <ul class="flex flex-col gap-1">${courses}</ul>
+    <p class="font-bold">Total: ${data.total} MAD</p>
+    <button id="checkout-done" type="button" class="rounded-lg bg-primary-600 px-4 py-2 font-semibold text-white hover:bg-primary-700">Terminer</button>
+</div>`;
+}

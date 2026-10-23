@@ -1,4 +1,4 @@
-import { CardMaker, PanierItemMaker, ModalCourseMaker } from "./components.js";
+import { CardMaker, PanierItemMaker, ModalCourseMaker, CheckoutModalMaker, CheckoutRecapMaker } from "./components.js";
 
 // ----------- Filter the courses --------------
 const container = document.getElementById("container-cards");
@@ -10,42 +10,30 @@ let state = {
     nivaux: "",
     matier: "",
     recherche: "",
-}
+};
 
-nivaux.addEventListener("change", () => {
+[nivaux, matier].forEach(el => el.addEventListener("change", () => {
     state.nivaux = nivaux.value;
-    SetCources(state);
-});
-
-matier.addEventListener("change", () => {
     state.matier = matier.value;
-    SetCources(state);
-});
+    setCources(state);
+}));
 
 search.addEventListener("input", () => {
     state.recherche = search.value.trim().toLowerCase();
-    SetCources(state);
+    setCources(state);
 });
 
 const data = await fetch("/src/assets/data.json");
 const dataFixed = await data.json();
 
-function SetCources(state) {
+function setCources(state) {
     let cardsData = dataFixed;
     container.innerHTML = "";
-    
-    if (state.nivaux) {
-        cardsData = cardsData.filter(card => state.nivaux === card.level);
-    }
-    
-    if (state.matier) {
-        cardsData = cardsData.filter(card => state.matier === card.category);
-    }
-    
-    if (state.recherche) {
-        cardsData = cardsData.filter(card => card.subject.toLowerCase().startsWith(state.recherche));
-    }
-    
+
+    if (state.nivaux) cardsData = cardsData.filter(card => state.nivaux === card.level);
+    if (state.matier) cardsData = cardsData.filter(card => state.matier === card.category);
+    if (state.recherche) cardsData = cardsData.filter(card => card.subject.toLowerCase().startsWith(state.recherche));
+
     for (let v of cardsData) {
         const div = document.createElement("div");
         div.innerHTML = CardMaker(v);
@@ -56,7 +44,7 @@ function SetCources(state) {
 
         container.appendChild(card);
     }
-    
+
     if (cardsData.length <= 0) {
         const p = document.createElement("p");
         p.textContent = "Aucun cours ne correspond.";
@@ -64,9 +52,9 @@ function SetCources(state) {
     }
 }
 
-SetCources(state);
+setCources(state);
 
-// ----------- Panier controll --------------
+// ----------- Panier --------------
 const panierContainer = document.getElementById("container-panier");
 const panierCount = document.getElementById("panier-count");
 const panierTotal = document.getElementById("panier-total");
@@ -76,6 +64,7 @@ const panierOverlay = document.getElementById("panier-overlay");
 const panierToggle = document.getElementById("panier-toggle");
 const panierToggleCount = document.getElementById("panier-toggle-count");
 const panierClose = document.getElementById("panier-close");
+const panierCheckOut = document.getElementById("panier-checkout");
 
 const panier = [];
 
@@ -84,9 +73,8 @@ function updatePanierSummary() {
     panierToggleCount.textContent = panier.length;
     panierToggleCount.classList.toggle("hidden", panier.length === 0);
     panierEmpty.classList.toggle("hidden", panier.length > 0);
-    const total = panier.reduce((sum, course) => sum + Number(course.price), 0);
-    const currency = "MAD";
-    panierTotal.textContent = `${total} ${currency}`;
+    const total = panier.reduce((sum, c) => sum + Number(c.price), 0);
+    panierTotal.textContent = `${total} MAD`;
 }
 
 function openPanier() {
@@ -98,6 +86,88 @@ function closePanier() {
     panierPanel.classList.add("hidden");
     panierOverlay.classList.add("hidden");
 }
+
+// ----------- Checkout --------------
+function openCheckout() {
+    const div = document.createElement("div");
+    div.innerHTML = CheckoutModalMaker();
+    const overlay = div.firstElementChild;
+    document.body.append(overlay);
+    document.body.classList.add("overflow-hidden");
+    closePanier();
+
+    const form = overlay.querySelector("#checkout-form");
+    const recap = overlay.querySelector("#checkout-recap");
+    const error = overlay.querySelector("#checkout-error");
+    const bars = overlay.querySelectorAll(".progress-bar");
+
+    const closeCheckout = () => {
+        overlay.remove();
+        document.body.classList.remove("overflow-hidden");
+    };
+
+    overlay.addEventListener("click", e => {
+        if (e.target === overlay) closeCheckout();
+    });
+    overlay.querySelector("#checkout-close").addEventListener("click", closeCheckout);
+
+    form.addEventListener("submit", e => {
+        e.preventDefault();
+        error.classList.add("hidden");
+        error.textContent = "";
+
+        if (panier.length === 0) {
+            error.textContent = "Panier vide.";
+            error.classList.remove("hidden");
+            return;
+        }
+
+        const parent = overlay.querySelector("#checkout-parent").value.trim();
+        const email = overlay.querySelector("#checkout-email").value.trim();
+        const phone = overlay.querySelector("#checkout-phone").value.replace(/\s/g, "");
+        const student = overlay.querySelector("#checkout-student").value.trim();
+        const level = overlay.querySelector("#checkout-level").value;
+        const pass = overlay.querySelector("#checkout-password").value;
+        const confirm = overlay.querySelector("#checkout-confirm").value;
+        const consent = overlay.querySelector("#checkout-consent").checked;
+
+        const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        const phoneOk = /^(?:\+212[67]\d{8}|0[67]\d{8})$/.test(phone);
+        const passOk = /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/.test(pass);
+
+        if (!parent) return showErr("Nom du parent requis.");
+        if (!emailOk) return showErr("Email invalide.");
+        if (!phoneOk) return showErr("Téléphone marocain invalide (06/07...");
+        if (!student) return showErr("Prénom de l'élève requis.");
+        if (!level) return showErr("Niveau de l'élève requis.");
+        if (!passOk) return showErr("Mot de passe: 8+ car., 1 maj, 1 chiffre, 1 spécial.");
+        if (pass !== confirm) return showErr("Confirmation différente.");
+        if (!consent) return showErr("Consentement requis.");
+
+        function showErr(msg) {
+            error.textContent = msg;
+            error.classList.remove("hidden");
+        }
+
+        const total = panier.reduce((s, c) => s + Number(c.price), 0);
+        recap.innerHTML = CheckoutRecapMaker({ dossier: `NA-${Date.now()}`, parent, email, student, level, courses: [...panier], total });
+        form.classList.add("hidden");
+        recap.classList.remove("hidden");
+        recap.classList.add("flex");
+        if (bars[0]) bars[0].classList.replace("bg-gray-200", "bg-green-500");
+        if (bars[1]) bars[1].classList.replace("bg-gray-200", "bg-primary-600");
+
+        recap.querySelector("#checkout-done").addEventListener("click", closeCheckout);
+        form.reset();
+        panier.length = 0;
+        panierContainer.innerHTML = "";
+        updatePanierSummary();
+    });
+}
+
+panierCheckOut.addEventListener("click", () => {
+    if (panier.length > 0) openCheckout();
+});
 
 panierToggle.addEventListener("click", openPanier);
 panierClose.addEventListener("click", closePanier);
@@ -150,5 +220,3 @@ function openModal(course) {
 
     overlay.querySelector("#modal-close").addEventListener("click", closeModal);
 }
-
-// ----------- Forms modals --------------
