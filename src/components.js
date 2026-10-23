@@ -1,5 +1,5 @@
 export function CardMaker(course) {
-    return `<article class="flex flex-1 flex-col gap-4 rounded-xl border border-b-black bg-white p-6 shadow-sm lg:min-w-[45%]">
+    return `<article class="flex flex-1 h-fit flex-col gap-4 rounded-xl border border-b-black bg-white p-6 shadow-sm lg:min-w-[45%]">
     <div class="flex items-start justify-between gap-4">
         <h3 class="text-2xl font-semibold text-text">${course.subject}</h3>
         <span class="rounded-full bg-primary-100 px-3 py-1 text-sm font-medium text-primary-700">
