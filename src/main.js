@@ -1,4 +1,5 @@
 import { CardMaker, PanierItemMaker, ModalCourseMaker, CheckoutModalMaker, CheckoutRecapMaker } from "./components.js";
+import { FixedData } from "./data.js";
 
 // ----------- Filter the courses --------------
 const container = document.getElementById("container-cards");
@@ -23,8 +24,7 @@ search.addEventListener("input", () => {
     setCources(state);
 });
 
-const data = await fetch("/src/assets/data.json");
-const dataFixed = await data.json();
+const dataFixed = FixedData;
 
 function setCources(state) {
     let cardsData = dataFixed;
