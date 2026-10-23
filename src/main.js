@@ -68,8 +68,25 @@ SetCources(state);
 
 // ----------- Panier controll --------------
 const panierContainer = document.getElementById("container-panier");
+const panierCount = document.getElementById("panier-count");
+const panierTotal = document.getElementById("panier-total");
+const panierEmpty = document.getElementById("panier-empty");
+
+const panier = [];
+
+function updatePanierSummary() {
+    panierCount.textContent = panier.length;
+    panierEmpty.classList.toggle("hidden", panier.length > 0);
+    const total = panier.reduce((sum, course) => sum + Number(course.price), 0);
+    const currency = "MAD";
+    panierTotal.textContent = `${total} ${currency}`;
+}
 
 function addToPanier(course) {
+    if (panier.some(item => item.id === course.id)) return;
+
+    panier.push(course);
+
     let div = document.createElement("div");
     div.innerHTML = PanierItemMaker(course)
     const panierItem = div.firstElementChild;
@@ -77,9 +94,16 @@ function addToPanier(course) {
 
     const deleteButton = panierItem.querySelector(`#delete-button-${course.id}`);
     deleteButton.addEventListener("click", () => {
+        const index = panier.findIndex(item => item.id === course.id);
+        if (index !== -1) panier.splice(index, 1);
         panierItem.remove();
+        updatePanierSummary();
     });
+
+    updatePanierSummary();
 }
+
+updatePanierSummary();
 
 // ----------- More details modal --------------
 function openModal(course) {
@@ -102,6 +126,8 @@ function openModal(course) {
     overlay.addEventListener("click", (e) => {
         if (e.target === overlay) closeModal();
     });
-    
+
     overlay.querySelector("#modal-close").addEventListener("click", closeModal);
 }
+
+// ----------- Forms modals --------------

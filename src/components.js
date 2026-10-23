@@ -37,7 +37,7 @@ ${course.price} ${course.currency}
                 id="button-add-to-panier-${course.id}"
                 type="button"
                 class="rounded-lg bg-primary-600 px-4 py-2 text-white transition hover:bg-primary-700 hover:cursor-pointer">
-                S'inscrire
+                Ajouter au panier
             </button>
         </div>
     </div>
