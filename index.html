@@ -64,12 +64,20 @@
             <div id="container-cards" class="gap-6 min-w-[48%] flex pb-6 flex-col md:flex-row md:flex-wrap md:w-[68%]">
             </div>
 
+            <div id="panier-overlay" class="fixed inset-0 z-40 hidden bg-black/40 md:hidden"></div>
+
             <!-- panier -->
             <div id="panier"
-                class="w-full sticky top-6 rounded-xl border border-black h-fit bg-white p-6 shadow-sm md:w-[28%]">
+                class="fixed left-0 right-0 bottom-0 z-50 hidden max-h-[85vh] w-full overflow-y-auto rounded-t-2xl border border-black bg-white p-6 shadow-xl md:sticky md:inset-x-auto md:bottom-auto md:top-6 md:z-auto md:block md:h-fit md:w-[28%] md:overflow-visible md:rounded-xl md:shadow-sm">
                 <div class="mb-6 flex items-center justify-between">
                     <h2 class="text-xl font-semibold text-text">Mon panier</h2>
-                    <span id="panier-count" class="flex h-7 w-7 items-center justify-center rounded-full bg-primary-100 text-sm font-medium text-primary-700">0</span>
+                    <div class="flex items-center gap-2">
+                        <span id="panier-count" class="flex h-7 w-7 items-center justify-center rounded-full bg-primary-100 text-sm font-medium text-primary-700">0</span>
+                        <button id="panier-close" type="button" aria-label="Fermer le panier"
+                            class="flex h-7 w-7 items-center justify-center rounded-full bg-primary-100 text-primary-700 transition hover:bg-primary-200 hover:cursor-pointer md:hidden">
+                            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                        </button>
+                    </div>
                 </div>
                 <div id="panier-items" class="flex flex-col gap-3">
                     <p id="panier-empty" class="text-sm text-text-subtle">Aucun cours sélectionné.</p>
@@ -90,6 +98,12 @@
             </div>
         </div>
     </main>
+
+    <button id="panier-toggle" type="button" aria-label="Ouvrir le panier" class="fixed bottom-6 right-6 z-40 flex items-center justify-center rounded-full bg-primary-600 p-4 text-xl text-white shadow-lg transition md:hidden">
+        <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
+        <span id="panier-toggle-count" class="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full bg-white text-xs font-bold text-primary-700 shadow">0</span>
+    </button>
+
     <footer></footer>
     <script type="module" src="/src/main.js"></script>
 </body>
