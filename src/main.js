@@ -1,6 +1,8 @@
 import { CardMaker, PanierItemMaker, ModalCourseMaker, CheckoutModalMaker, CheckoutRecapMaker } from "./components.js";
 import { FixedData } from "./data.js";
 
+const registrationsStorageKey = "nourAcademyRegistrations";
+
 // ----------- Filter the courses --------------
 const container = document.getElementById("container-cards");
 const nivaux = document.getElementById("filter-niveau");
@@ -153,14 +155,32 @@ function openCheckout() {
         }
 
         const total = panier.reduce((s, c) => s + Number(c.price), 0);
-        recap.innerHTML = CheckoutRecapMaker({ dossier: `NA-${Date.now()}`, parent, email, student, level, courses: [...panier], total });
+        const registrations = JSON.parse(localStorage.getItem(registrationsStorageKey) || "[]");
+        const dossier = registrations.length + 1;
+        const savedCourses = panier.map(course => ({
+            id: course.id,
+            title: course.subject,
+            priceMADPerMonth: Number(course.price),
+        }));
+        recap.innerHTML = CheckoutRecapMaker({ dossier, parent, email, student, level, courses: [...panier], total });
         form.classList.add("hidden");
         recap.classList.remove("hidden");
         recap.classList.add("flex");
         if (bars[0]) bars[0].classList.replace("bg-gray-200", "bg-green-500");
         if (bars[1]) bars[1].classList.replace("bg-gray-200", "bg-primary-600");
 
-        recap.querySelector("#checkout-done").addEventListener("click", closeCheckout);
+        recap.querySelector("#checkout-done").addEventListener("click", () => {
+            registrations.push({
+                id: dossier,
+                parent: { name: parent, email, phone },
+                student: { name: student, level },
+                courses: savedCourses,
+                totalMADPerMonth: total,
+            });
+
+            localStorage.setItem(registrationsStorageKey, JSON.stringify(registrations));
+            closeCheckout();
+        });
         form.reset();
         panier.length = 0;
         panierContainer.innerHTML = "";
