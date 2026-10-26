@@ -4,6 +4,11 @@ A small course-catalog web app built with **vanilla JavaScript** and **Vite** to
 
 The interface is in French. Parents can browse tutoring courses for their children, filter them, view details, add them to a cart, and complete a mock registration flow.
 
+## Project links
+
+- **Jira board:** [Nour Academy backlog](https://obetoxteam.atlassian.net/jira/software/projects/NOUR/boards/47/backlog)
+- **Live website:** [Nour Academy on Vercel](https://nour-academy-one.vercel.app/)
+
 ## Purpose
 
 This project is a learning exercise focused on working directly with the DOM — no framework, no UI library, just the browser APIs.

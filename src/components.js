@@ -15,7 +15,7 @@ ${course.days.join(" et ")} · ${course.startTime} – ${course.endTime}
 ${course.teacher} · ${course.room} · ${course.minAge} – ${course.maxAge} ans
     </p>
 
-    <p class="text-sm text-text-subtle">${course.availablePlaces} places restantes</p>
+    <p class="text-sm text-text-subtle">${course.availablePlaces > 0 ? `${course.availablePlaces} places restantes` : "Complet"}</p>
 
     <div class="flex flex-wrap items-center justify-between gap-4">
         <p class="text-xl font-semibold text-text">
@@ -36,7 +36,8 @@ ${course.price} ${course.currency}
             <button
                 id="button-add-to-panier-${course.id}"
                 type="button"
-                class="rounded-lg bg-primary-600 px-4 py-2 text-white transition hover:bg-primary-700 hover:cursor-pointer">
+                ${course.availablePlaces === 0 ? "disabled" : ""}
+                class="rounded-lg bg-primary-600 px-4 py-2 text-white transition hover:bg-primary-700 hover:cursor-pointer disabled:cursor-not-allowed disabled:opacity-50">
                 Ajouter au panier
             </button>
         </div>
@@ -110,7 +111,7 @@ export function CheckoutModalMaker() {
             <i class="fa-solid fa-xmark"></i>
         </button>
 
-        <form id="checkout-form" novalidate class="flex flex-col gap-3">
+        <form id="checkout-form" class="flex flex-col gap-3">
             <div class="flex flex-col gap-1 pr-12">
                 <h2 class="text-xl font-semibold text-text sm:text-2xl">Inscription</h2>
                 <p class="text-sm text-text-muted">Étape 1/2</p>
@@ -120,22 +121,22 @@ export function CheckoutModalMaker() {
                 <div class="progress-bar h-2 flex-1 rounded-full bg-gray-200"></div>
             </div>
 
-            <input id="checkout-parent" type="text" placeholder="Nom du parent" class="rounded-lg border border-black px-3 py-2" />
-            <input id="checkout-email" type="email" placeholder="Email" class="rounded-lg border border-black px-3 py-2" />
-            <input id="checkout-phone" type="tel" placeholder="06XXXXXXXX ou +2126XXXXXXX" class="rounded-lg border border-black px-3 py-2" />
-            <input id="checkout-student" type="text" placeholder="Prénom de l'élève" class="rounded-lg border border-black px-3 py-2" />
-            <select id="checkout-level" class="rounded-lg border border-black px-3 py-2">
+            <input id="checkout-parent" type="text" placeholder="Nom du parent" minlength="2" maxlength="60" required class="rounded-lg border border-black px-3 py-2" />
+            <input id="checkout-email" type="email" placeholder="Email" pattern="[^\s@]+@[^\s@]+\.[^\s@]+" minlength="5" maxlength="254" required class="rounded-lg border border-black px-3 py-2" />
+            <input id="checkout-phone" type="tel" placeholder="06XXXXXXXX ou +2126XXXXXXX" pattern="(\+212[67][0-9]{8}|0[67][0-9]{8})" minlength="10" maxlength="13" required class="rounded-lg border border-black px-3 py-2" />
+            <input id="checkout-student" type="text" placeholder="Prénom de l'élève" minlength="2" maxlength="60" required class="rounded-lg border border-black px-3 py-2" />
+            <select id="checkout-level" required class="rounded-lg border border-black px-3 py-2">
                 <option value="">Niveau de l'élève</option>
                 <option value="Primaire">Primaire</option>
                 <option value="Collège">Collège</option>
                 <option value="Lycée">Lycée</option>
                 <option value="Bac">Bac</option>
             </select>
-            <input id="checkout-password" type="password" placeholder="Mot de passe" class="rounded-lg border border-black px-3 py-2" />
-            <input id="checkout-confirm" type="password" placeholder="Confirmation" class="rounded-lg border border-black px-3 py-2" />
+            <input id="checkout-password" type="password" placeholder="Mot de passe" pattern="(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,64}" minlength="8" maxlength="64" required class="rounded-lg border border-black px-3 py-2" />
+            <input id="checkout-confirm" type="password" placeholder="Confirmation" minlength="8" maxlength="64" required class="rounded-lg border border-black px-3 py-2" />
 
             <label class="flex items-start gap-2 text-sm text-text">
-                <input id="checkout-consent" type="checkbox" class="mt-1" />
+                <input id="checkout-consent" type="checkbox" required class="mt-1" />
                 <span>J'accepte le consentement</span>
             </label>
 

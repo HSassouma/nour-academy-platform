@@ -133,14 +133,17 @@ function openCheckout() {
 
         const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
         const phoneOk = /^(?:\+212[67]\d{8}|0[67]\d{8})$/.test(phone);
-        const passOk = /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/.test(pass);
+        const passOk = /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,64}$/.test(pass);
 
-        if (!parent) return showErr("Nom du parent requis.");
+        if (parent.length < 2 || parent.length > 60) return showErr("Le nom du parent doit contenir entre 2 et 60 caractères.");
+        if (email.length < 5 || email.length > 254) return showErr("L'email doit contenir entre 5 et 254 caractères.");
         if (!emailOk) return showErr("Email invalide.");
-        if (!phoneOk) return showErr("Téléphone marocain invalide (06/07...");
-        if (!student) return showErr("Prénom de l'élève requis.");
+        if (phone.length < 10 || phone.length > 13) return showErr("Le téléphone doit contenir entre 10 et 13 caractères.");
+        if (!phoneOk) return showErr("Téléphone marocain invalide : utilisez 06/07XXXXXXXX ou +2126/7XXXXXXXX.");
+        if (student.length < 2 || student.length > 60) return showErr("Le prénom de l'élève doit contenir entre 2 et 60 caractères.");
         if (!level) return showErr("Niveau de l'élève requis.");
         if (!passOk) return showErr("Mot de passe: 8+ car., 1 maj, 1 chiffre, 1 spécial.");
+        if (confirm.length < 8 || confirm.length > 64) return showErr("La confirmation doit contenir entre 8 et 64 caractères.");
         if (pass !== confirm) return showErr("Confirmation différente.");
         if (!consent) return showErr("Consentement requis.");
 
@@ -174,9 +177,11 @@ panierClose.addEventListener("click", closePanier);
 panierOverlay.addEventListener("click", closePanier);
 
 function addToPanier(course) {
-    if (panier.some(item => item.id === course.id)) return;
+    if (panier.some(item => item.id === course.id) || course.availablePlaces === 0) return;
 
     panier.push(course);
+    course.availablePlaces -= 1;
+    setCources(state);
 
     let div = document.createElement("div");
     div.innerHTML = PanierItemMaker(course)
@@ -186,7 +191,11 @@ function addToPanier(course) {
     const deleteButton = panierItem.querySelector(`#delete-button-${course.id}`);
     deleteButton.addEventListener("click", () => {
         const index = panier.findIndex(item => item.id === course.id);
-        if (index !== -1) panier.splice(index, 1);
+        if (index !== -1) {
+            panier.splice(index, 1);
+            course.availablePlaces += 1;
+            setCources(state);
+        }
         panierItem.remove();
         updatePanierSummary();
     });
