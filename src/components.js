@@ -123,7 +123,7 @@ export function CheckoutModalMaker() {
 
             <input id="checkout-parent" type="text" placeholder="Nom du parent" minlength="2" maxlength="60" required class="rounded-lg border border-black px-3 py-2" />
             <input id="checkout-email" type="email" placeholder="Email" pattern="[^\s@]+@[^\s@]+\.[^\s@]+" minlength="5" maxlength="254" required class="rounded-lg border border-black px-3 py-2" />
-            <input id="checkout-phone" type="tel" placeholder="06XXXXXXXX ou +2126XXXXXXX" pattern="(\+212[67][0-9]{8}|0[67][0-9]{8})" minlength="10" maxlength="13" required class="rounded-lg border border-black px-3 py-2" />
+            <input id="checkout-phone" type="tel" placeholder="06XXXXXXXX ou +2126XXXXXXX" pattern="([+]212[67][0-9]{8}|0[67][0-9]{8})" minlength="10" maxlength="13" required class="rounded-lg border border-black px-3 py-2" />
             <input id="checkout-student" type="text" placeholder="Prénom de l'élève" minlength="2" maxlength="60" required class="rounded-lg border border-black px-3 py-2" />
             <select id="checkout-level" required class="rounded-lg border border-black px-3 py-2">
                 <option value="">Niveau de l'élève</option>
