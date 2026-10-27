@@ -59,6 +59,7 @@
                         <input id="registration-student-name" type="text" required minlength="2" maxlength="60"
                             autocomplete="off"
                             class="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 focus:border-blue-500 focus:outline-none" />
+                        <span id="error-student-name" class="text-xs text-red-600 hidden" role="alert"></span>
                     </div>
 
                     <div class="flex flex-col gap-1">
@@ -73,6 +74,7 @@
                             <option value="Lycée">Lycée</option>
                             <option value="Bac">Bac</option>
                         </select>
+                        <span id="error-level" class="text-xs text-red-600 hidden" role="alert"></span>
                     </div>
 
                     <div class="flex flex-col gap-1">
@@ -83,6 +85,7 @@
                             class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 focus:border-blue-500 focus:outline-none">
                             <option value="">Choisir un cours</option>
                         </select>
+                        <span id="error-course" class="text-xs text-red-600 hidden" role="alert"></span>
                         <p class="text-xs text-gray-500">Capacité maximale : 15 élèves par groupe.</p>
                     </div>
 
@@ -93,6 +96,7 @@
                         <input id="registration-parent-name" type="text" required minlength="2" maxlength="60"
                             autocomplete="off"
                             class="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 focus:border-blue-500 focus:outline-none" />
+                        <span id="error-parent-name" class="text-xs text-red-600 hidden" role="alert"></span>
                     </div>
 
                     <div class="flex flex-col gap-1">
@@ -102,6 +106,7 @@
                         <input id="registration-parent-phone" type="tel" required minlength="10" maxlength="13"
                             inputmode="tel" autocomplete="tel" placeholder="06XXXXXXXX ou +2126XXXXXXXX"
                             class="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 focus:border-blue-500 focus:outline-none" />
+                        <span id="error-phone" class="text-xs text-red-600 hidden" role="alert"></span>
                     </div>
 
                     <div class="flex flex-col gap-1">
@@ -114,15 +119,10 @@
                             <option value="Validée">Validée</option>
                             <option value="Payée">Payée</option>
                         </select>
+                        <span id="error-status" class="text-xs text-red-600 hidden" role="alert"></span>
                     </div>
 
-                    <div class="flex flex-col gap-1">
-                        <label for="registration-date" class="text-sm font-medium text-gray-700">
-                            Date d'inscription <span class="text-red-600">*</span>
-                        </label>
-                        <input id="registration-date" type="date" required
-                            class="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 focus:border-blue-500 focus:outline-none" />
-                    </div>
+                    
 
                     <p id="registration-form-error" role="alert"
                         class="hidden rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 md:col-span-2"></p>
