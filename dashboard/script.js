@@ -14,14 +14,63 @@ if (!localStorage.getItem(STORAGE_KEY)) {
 
 let data = JSON.parse(localStorage.getItem(STORAGE_KEY));
 
+// Migration des inscriptions héritées : les dossiers fictifs enregistrés avant
+// l'ajout du statut n'en possèdent pas. On leur applique alors le statut par
+// défaut "En attente" sans jamais écraser un statut déjà défini ou modifié par
+// la secrétaire, et donc sans réinitialiser les statuts à chaque chargement.
+function appliquerStatutParDefaut() {
+  let migrationNecessaire = false;
+
+  for (const registration of data) {
+    const statut = registration.status;
+    if (typeof statut !== "string" || statut.trim() === "") {
+      registration.status = "En attente";
+      migrationNecessaire = true;
+    }
+  }
+
+  if (migrationNecessaire) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+}
+
+appliquerStatutParDefaut();
+
 // -------------- table of content ---------------
 const tableBody = document.getElementById("table-body");
 const count = document.getElementById("count");
 
+function statutBadgeHtml(statut) {
+  let couleurFond = "bg-gray-100";
+  let couleurTexte = "text-gray-700";
+
+  if (statut === "En attente") {
+    couleurFond = "bg-yellow-100";
+    couleurTexte = "text-yellow-800";
+  } else if (statut === "Validée") {
+    couleurFond = "bg-green-100";
+    couleurTexte = "text-green-700";
+  } else if (statut === "Payée") {
+    couleurFond = "bg-blue-100";
+    couleurTexte = "text-blue-700";
+  }
+
+  const affichage = statut || "En attente";
+  return `<span class="rounded-full ${couleurFond} px-2.5 py-1 text-xs font-medium ${couleurTexte}">${affichage}</span>`;
+}
+
 function afficherInscriptions() {
   tableBody.innerHTML = "";
   for (const registration of data) {
-    tableBody.innerHTML += RegistrationItemMaker(registration);
+    const rowHtml = RegistrationItemMaker(registration);
+
+    const statusHtml = statutBadgeHtml(registration.status);
+    const patchedHtml = rowHtml.replace(
+      /<span class="rounded-full bg-red-100 px-2\.5 py-1 text-xs font-medium text-red-700">\s*Impayé\s*<\/span>/,
+      statusHtml,
+    );
+
+    tableBody.innerHTML += patchedHtml;
   }
 
   count.textContent = `${data.length} ${data.length === 1 ? "inscription" : "inscriptions"}`;
@@ -334,4 +383,353 @@ form.addEventListener("submit", function (event) {
 
   successMessage.textContent = "L'inscription a été ajoutée avec succès !";
   successMessage.classList.remove("hidden");
+});
+
+// -------------- edit registration popup ---------------
+const editOverlay = document.getElementById("edit-registration-overlay");
+const editContainer = document.getElementById("edit-registration-container");
+const editCloseButton = document.getElementById("close-edit-registration");
+const editCancelButton = document.getElementById("cancel-edit-registration");
+const editForm = document.getElementById("edit-registration-form");
+const editIdInput = document.getElementById("edit-registration-id");
+const editStudentNameInput = document.getElementById("edit-student-name");
+const editLevelSelect = document.getElementById("edit-level");
+const editCourseSelect = document.getElementById("edit-course");
+const editParentNameInput = document.getElementById("edit-parent-name");
+const editParentPhoneInput = document.getElementById("edit-parent-phone");
+const editStatusSelect = document.getElementById("edit-status");
+
+// Per-field error elements for edit popup
+const editErrorStudentName = document.getElementById("edit-error-student-name");
+const editErrorLevel = document.getElementById("edit-error-level");
+const editErrorCourse = document.getElementById("edit-error-course");
+const editErrorParentName = document.getElementById("edit-error-parent-name");
+const editErrorPhone = document.getElementById("edit-error-phone");
+const editErrorStatus = document.getElementById("edit-error-status");
+const editFormError = document.getElementById("edit-form-error");
+
+// Live error clearing on user input / change (edit popup)
+editStudentNameInput.addEventListener("input", function () {
+  editErrorStudentName.textContent = "";
+  editErrorStudentName.classList.add("hidden");
+});
+editLevelSelect.addEventListener("change", function () {
+  editErrorLevel.textContent = "";
+  editErrorLevel.classList.add("hidden");
+  remplirEditCoursParNiveau(this.value);
+  editErrorCourse.textContent = "";
+  editErrorCourse.classList.add("hidden");
+});
+editCourseSelect.addEventListener("change", function () {
+  editErrorCourse.textContent = "";
+  editErrorCourse.classList.add("hidden");
+});
+editParentNameInput.addEventListener("input", function () {
+  editErrorParentName.textContent = "";
+  editErrorParentName.classList.add("hidden");
+});
+editParentPhoneInput.addEventListener("input", function () {
+  editErrorPhone.textContent = "";
+  editErrorPhone.classList.add("hidden");
+});
+editStatusSelect.addEventListener("change", function () {
+  editErrorStatus.textContent = "";
+  editErrorStatus.classList.add("hidden");
+});
+
+function remplirEditCoursParNiveau(niveau) {
+  editCourseSelect.innerHTML = '<option value="">Choisir un cours</option>';
+
+  if (!niveau) return;
+
+  if (niveau === "Primaire") {
+    const option = document.createElement("option");
+    option.value = "";
+    option.textContent = "Aucun cours disponible pour ce niveau";
+    option.disabled = true;
+    editCourseSelect.appendChild(option);
+    return;
+  }
+
+  const coursFiltres = FixedData.filter(
+    (course) => course.level === niveau || course.level === "Tous niveaux",
+  );
+
+  if (coursFiltres.length === 0) {
+    const option = document.createElement("option");
+    option.value = "";
+    option.textContent = "Aucun cours disponible pour ce niveau";
+    option.disabled = true;
+    editCourseSelect.appendChild(option);
+    return;
+  }
+
+  for (const course of coursFiltres) {
+    const option = document.createElement("option");
+    option.value = course.id;
+    option.textContent = `${course.subject} — ${course.level} — ${course.price} MAD/mois`;
+    editCourseSelect.appendChild(option);
+  }
+}
+
+function effacerErreursEdit() {
+  editErrorStudentName.textContent = "";
+  editErrorStudentName.classList.add("hidden");
+  editErrorLevel.textContent = "";
+  editErrorLevel.classList.add("hidden");
+  editErrorCourse.textContent = "";
+  editErrorCourse.classList.add("hidden");
+  editErrorParentName.textContent = "";
+  editErrorParentName.classList.add("hidden");
+  editErrorPhone.textContent = "";
+  editErrorPhone.classList.add("hidden");
+  editErrorStatus.textContent = "";
+  editErrorStatus.classList.add("hidden");
+  editFormError.textContent = "";
+  editFormError.classList.add("hidden");
+}
+
+// 1. Afficher le popup de modification
+function afficherPopupModification(id) {
+  data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+
+  const inscription = data.find(
+    (registration) => Number(registration.id) === Number(id),
+  );
+
+  if (!inscription) {
+    console.error(
+      `Impossible de modifier : inscription avec l'ID ${id} introuvable.`,
+    );
+    return;
+  }
+
+  effacerErreursEdit();
+
+  editIdInput.value = inscription.id;
+  editStudentNameInput.value = inscription.student.name;
+  editLevelSelect.value = inscription.student.level;
+
+  remplirEditCoursParNiveau(inscription.student.level);
+
+  if (inscription.courses && inscription.courses.length > 0) {
+    editCourseSelect.value = inscription.courses[0].id;
+  }
+
+  editParentNameInput.value = inscription.parent.name;
+  editParentPhoneInput.value = inscription.parent.phone;
+  editStatusSelect.value =
+    typeof inscription.status === "string" && inscription.status.trim() !== ""
+      ? inscription.status
+      : "En attente";
+
+  editOverlay.classList.remove("hidden");
+  editContainer.classList.remove("hidden");
+}
+
+// 2. Fermer le popup de modification
+function fermerPopupModification() {
+  editOverlay.classList.add("hidden");
+  editContainer.classList.add("hidden");
+  effacerErreursEdit();
+}
+
+editCloseButton.addEventListener("click", fermerPopupModification);
+editCancelButton.addEventListener("click", fermerPopupModification);
+editOverlay.addEventListener("click", function (event) {
+  if (event.target === editOverlay) {
+    fermerPopupModification();
+  }
+});
+
+// 3. Modifier l'inscription (soumission du formulaire d'édition)
+function modifierInscription(event) {
+  event.preventDefault();
+  effacerErreursEdit();
+
+  const id = Number(editIdInput.value);
+  const nomEleve = editStudentNameInput.value.trim();
+  const niveau = editLevelSelect.value;
+  const nomParent = editParentNameInput.value.trim();
+  const telephoneParent = editParentPhoneInput.value.trim();
+  const statut = editStatusSelect.value;
+
+  const coursChoisi = FixedData.find(
+    (course) => String(course.id) === editCourseSelect.value,
+  );
+
+  let formulaireValide = true;
+
+  // Validation du nom de l'élève
+  if (!nomEleve) {
+    editErrorStudentName.textContent =
+      "Le nom et prénom de l'élève est obligatoire.";
+    editErrorStudentName.classList.remove("hidden");
+    formulaireValide = false;
+  } else if (!nomValide(nomEleve)) {
+    editErrorStudentName.textContent =
+      "Le nom doit contenir entre 2 et 60 caractères.";
+    editErrorStudentName.classList.remove("hidden");
+    formulaireValide = false;
+  }
+
+  // Validation du niveau
+  if (!niveau) {
+    editErrorLevel.textContent = "Veuillez choisir un niveau.";
+    editErrorLevel.classList.remove("hidden");
+    formulaireValide = false;
+  }
+
+  // Validation du cours
+  if (!editCourseSelect.value) {
+    if (niveau && niveau !== "Primaire" && niveau !== "Bac") {
+      const coursDisponibles = FixedData.filter(
+        (course) =>
+          course.level === niveau || course.level === "Tous niveaux",
+      );
+      if (coursDisponibles.length > 0) {
+        editErrorCourse.textContent = "Veuillez choisir un cours.";
+        editErrorCourse.classList.remove("hidden");
+        formulaireValide = false;
+      }
+    } else if (niveau === "Primaire") {
+      editErrorCourse.textContent =
+        "Aucun cours disponible pour le niveau Primaire.";
+      editErrorCourse.classList.remove("hidden");
+      formulaireValide = false;
+    } else if (niveau === "Bac") {
+      const coursDisponibles = FixedData.filter(
+        (course) => course.level === "Tous niveaux",
+      );
+      if (coursDisponibles.length > 0) {
+        editErrorCourse.textContent = "Veuillez choisir un cours.";
+        editErrorCourse.classList.remove("hidden");
+        formulaireValide = false;
+      }
+    }
+  } else if (!coursChoisi) {
+    editErrorCourse.textContent = "Le cours sélectionné n'existe pas.";
+    editErrorCourse.classList.remove("hidden");
+    formulaireValide = false;
+  }
+
+  // Validation du nom du parent
+  if (!nomParent) {
+    editErrorParentName.textContent =
+      "Le nom et prénom du parent est obligatoire.";
+    editErrorParentName.classList.remove("hidden");
+    formulaireValide = false;
+  } else if (!nomValide(nomParent)) {
+    editErrorParentName.textContent =
+      "Le nom doit contenir entre 2 et 60 caractères.";
+    editErrorParentName.classList.remove("hidden");
+    formulaireValide = false;
+  }
+
+  // Validation du téléphone
+  if (!telephoneParent) {
+    editErrorPhone.textContent = "Le numéro de téléphone est obligatoire.";
+    editErrorPhone.classList.remove("hidden");
+    formulaireValide = false;
+  } else if (!telephoneValide(telephoneParent)) {
+    editErrorPhone.textContent =
+      "Le numéro de téléphone doit être au format 06XXXXXXXX ou +2126XXXXXXXX.";
+    editErrorPhone.classList.remove("hidden");
+    formulaireValide = false;
+  }
+
+  // Validation du statut
+  if (!statut) {
+    editErrorStatus.textContent = "Veuillez choisir un statut.";
+    editErrorStatus.classList.remove("hidden");
+    formulaireValide = false;
+  } else if (!STATUTS_INSCRIPTION.includes(statut)) {
+    editErrorStatus.textContent =
+      "Veuillez choisir un statut valide (En attente, Validée ou Payée).";
+    editErrorStatus.classList.remove("hidden");
+    formulaireValide = false;
+  }
+
+  if (!formulaireValide) return;
+
+  // Contrôle des doublons (exclut l'inscription en cours de modification)
+  const inscriptionExiste = data.some(
+    (registration) =>
+      Number(registration.id) !== id &&
+      registration.student.name.toLowerCase() === nomEleve.toLowerCase() &&
+      registration.courses.some(
+        (course) => String(course.id) === String(coursChoisi.id),
+      ),
+  );
+
+  if (inscriptionExiste) {
+    editFormError.textContent = "Cet élève est déjà inscrit à ce cours.";
+    editFormError.classList.remove("hidden");
+    return;
+  }
+
+  // Contrôle de la capacité maximale (exclut l'inscription modifiée)
+  const nombreDansGroupe = data.filter(
+    (registration) =>
+      Number(registration.id) !== id &&
+      String(registration.student.level) === String(niveau) &&
+      registration.courses.some(
+        (course) => String(course.id) === String(coursChoisi.id),
+      ),
+  ).length;
+
+  if (nombreDansGroupe >= CAPACITE_MAX_GROUPE) {
+    editFormError.textContent =
+      "Ce groupe a atteint sa capacité maximale de 15 élèves.";
+    editFormError.classList.remove("hidden");
+    return;
+  }
+
+  // Mise à jour de l'inscription existante
+  const index = data.findIndex(
+    (registration) => Number(registration.id) === id,
+  );
+
+  if (index === -1) return;
+
+  data[index] = {
+    ...data[index],
+    parent: {
+      ...data[index].parent,
+      name: nomParent,
+      phone: telephoneParent,
+    },
+    student: {
+      ...data[index].student,
+      name: nomEleve,
+      level: niveau,
+    },
+    courses: [
+      {
+        id: coursChoisi.id,
+        title: `${coursChoisi.subject} - ${coursChoisi.level}`,
+        priceMADPerMonth: Number(coursChoisi.price),
+      },
+    ],
+    totalMADPerMonth: Number(coursChoisi.price),
+    status: statut,
+  };
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+
+  afficherInscriptions();
+  fermerPopupModification();
+
+  successMessage.textContent = "L'inscription a été modifiée avec succès !";
+  successMessage.classList.remove("hidden");
+}
+
+editForm.addEventListener("submit", modifierInscription);
+
+// Event delegation : clic sur "Modifier" dans le tableau
+tableBody.addEventListener("click", function (event) {
+  const editButton = event.target.closest("[data-action='edit']");
+  if (editButton) {
+    afficherPopupModification(editButton.getAttribute("data-id"));
+  }
 });

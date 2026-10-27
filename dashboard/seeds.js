@@ -14,7 +14,8 @@ export const RegistrationsData = [
       { "id": 1, "title": "Mathématiques", "priceMADPerMonth": 400 },
       { "id": 3, "title": "Français", "priceMADPerMonth": 350 }
     ],
-    "totalMADPerMonth": 750
+    "totalMADPerMonth": 750,
+    "status": "En attente"
   },
   {
     "id": 2,
@@ -31,7 +32,8 @@ export const RegistrationsData = [
       { "id": 6, "title": "Mathématiques", "priceMADPerMonth": 500 },
       { "id": 7, "title": "Physique-Chimie", "priceMADPerMonth": 500 }
     ],
-    "totalMADPerMonth": 1000
+    "totalMADPerMonth": 1000,
+    "status": "En attente"
   },
   {
     "id": 3,
@@ -48,7 +50,8 @@ export const RegistrationsData = [
       { "id": 2, "title": "Physique-Chimie", "priceMADPerMonth": 450 },
       { "id": 4, "title": "Anglais", "priceMADPerMonth": 350 }
     ],
-    "totalMADPerMonth": 800
+    "totalMADPerMonth": 800,
+    "status": "En attente"
   },
   {
     "id": 4,
@@ -65,7 +68,8 @@ export const RegistrationsData = [
       { "id": 10, "title": "Préparation au Bac", "priceMADPerMonth": 600 },
       { "id": 9, "title": "Anglais", "priceMADPerMonth": 400 }
     ],
-    "totalMADPerMonth": 1000
+    "totalMADPerMonth": 1000,
+    "status": "En attente"
   },
   {
     "id": 5,
@@ -81,7 +85,8 @@ export const RegistrationsData = [
     "courses": [
       { "id": 5, "title": "Informatique", "priceMADPerMonth": 350 }
     ],
-    "totalMADPerMonth": 350
+    "totalMADPerMonth": 350,
+    "status": "En attente"
   },
   {
     "id": 6,
@@ -99,7 +104,8 @@ export const RegistrationsData = [
       { "id": 9, "title": "Anglais", "priceMADPerMonth": 400 },
       { "id": 6, "title": "Mathématiques", "priceMADPerMonth": 500 }
     ],
-    "totalMADPerMonth": 1300
+    "totalMADPerMonth": 1300,
+    "status": "En attente"
   },
   {
     "id": 7,
@@ -116,7 +122,8 @@ export const RegistrationsData = [
       { "id": 1, "title": "Mathématiques", "priceMADPerMonth": 400 },
       { "id": 2, "title": "Physique-Chimie", "priceMADPerMonth": 450 }
     ],
-    "totalMADPerMonth": 850
+    "totalMADPerMonth": 850,
+    "status": "En attente"
   },
   {
     "id": 8,
@@ -133,7 +140,8 @@ export const RegistrationsData = [
       { "id": 11, "title": "Robotique", "priceMADPerMonth": 450 },
       { "id": 4, "title": "Anglais", "priceMADPerMonth": 350 }
     ],
-    "totalMADPerMonth": 800
+    "totalMADPerMonth": 800,
+    "status": "En attente"
   },
   {
     "id": 9,
@@ -150,7 +158,8 @@ export const RegistrationsData = [
       { "id": 3, "title": "Français", "priceMADPerMonth": 350 },
       { "id": 12, "title": "Espagnol", "priceMADPerMonth": 350 }
     ],
-    "totalMADPerMonth": 700
+    "totalMADPerMonth": 700,
+    "status": "En attente"
   },
   {
     "id": 10,
@@ -167,7 +176,8 @@ export const RegistrationsData = [
       { "id": 7, "title": "Physique-Chimie", "priceMADPerMonth": 500 },
       { "id": 8, "title": "SVT", "priceMADPerMonth": 400 }
     ],
-    "totalMADPerMonth": 900
+    "totalMADPerMonth": 900,
+    "status": "En attente"
   },
   {
     "id": 11,
@@ -184,7 +194,8 @@ export const RegistrationsData = [
       { "id": 1, "title": "Mathématiques", "priceMADPerMonth": 400 },
       { "id": 5, "title": "Informatique", "priceMADPerMonth": 350 }
     ],
-    "totalMADPerMonth": 750
+    "totalMADPerMonth": 750,
+    "status": "En attente"
   },
   {
     "id": 12,
@@ -200,7 +211,8 @@ export const RegistrationsData = [
     "courses": [
       { "id": 10, "title": "Préparation au Bac", "priceMADPerMonth": 600 }
     ],
-    "totalMADPerMonth": 600
+    "totalMADPerMonth": 600,
+    "status": "En attente"
   },
   {
     "id": 13,
@@ -218,7 +230,8 @@ export const RegistrationsData = [
       { "id": 3, "title": "Français", "priceMADPerMonth": 350 },
       { "id": 4, "title": "Anglais", "priceMADPerMonth": 350 }
     ],
-    "totalMADPerMonth": 1150
+    "totalMADPerMonth": 1150,
+    "status": "En attente"
   },
   {
     "id": 14,
@@ -235,7 +248,8 @@ export const RegistrationsData = [
       { "id": 6, "title": "Mathématiques", "priceMADPerMonth": 500 },
       { "id": 9, "title": "Anglais", "priceMADPerMonth": 400 }
     ],
-    "totalMADPerMonth": 900
+    "totalMADPerMonth": 900,
+    "status": "En attente"
   },
   {
     "id": 15,
@@ -252,7 +266,8 @@ export const RegistrationsData = [
       { "id": 12, "title": "Espagnol", "priceMADPerMonth": 350 },
       { "id": 5, "title": "Informatique", "priceMADPerMonth": 350 }
     ],
-    "totalMADPerMonth": 700
+    "totalMADPerMonth": 700,
+    "status": "En attente"
   },
   {
     "id": 16,
@@ -269,7 +284,8 @@ export const RegistrationsData = [
       { "id": 11, "title": "Robotique", "priceMADPerMonth": 450 },
       { "id": 1, "title": "Mathématiques", "priceMADPerMonth": 400 }
     ],
-    "totalMADPerMonth": 850
+    "totalMADPerMonth": 850,
+    "status": "En attente"
   },
   {
     "id": 17,
@@ -287,7 +303,8 @@ export const RegistrationsData = [
       { "id": 8, "title": "SVT", "priceMADPerMonth": 400 },
       { "id": 10, "title": "Préparation au Bac", "priceMADPerMonth": 600 }
     ],
-    "totalMADPerMonth": 1500
+    "totalMADPerMonth": 1500,
+    "status": "En attente"
   },
   {
     "id": 18,
@@ -304,7 +321,8 @@ export const RegistrationsData = [
       { "id": 2, "title": "Physique-Chimie", "priceMADPerMonth": 450 },
       { "id": 4, "title": "Anglais", "priceMADPerMonth": 350 }
     ],
-    "totalMADPerMonth": 800
+    "totalMADPerMonth": 800,
+    "status": "En attente"
   },
   {
     "id": 19,
@@ -320,7 +338,8 @@ export const RegistrationsData = [
     "courses": [
       { "id": 6, "title": "Mathématiques", "priceMADPerMonth": 500 }
     ],
-    "totalMADPerMonth": 500
+    "totalMADPerMonth": 500,
+    "status": "En attente"
   },
   {
     "id": 20,
@@ -337,6 +356,7 @@ export const RegistrationsData = [
       { "id": 10, "title": "Préparation au Bac", "priceMADPerMonth": 600 },
       { "id": 7, "title": "Physique-Chimie", "priceMADPerMonth": 500 }
     ],
-    "totalMADPerMonth": 1100
+    "totalMADPerMonth": 1100,
+    "status": "En attente"
   }
 ];
