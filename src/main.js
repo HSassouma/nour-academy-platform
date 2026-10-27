@@ -1,5 +1,6 @@
 import { CardMaker, PanierItemMaker, ModalCourseMaker, CheckoutModalMaker, CheckoutRecapMaker } from "./components.js";
 import { FixedData } from "./data.js";
+import { emailValide, motDePasseValide, nomValide, telephoneValide } from "./validation.js";
 
 const registrationsStorageKey = "nourAcademyRegistrations";
 
@@ -133,16 +134,16 @@ function openCheckout() {
         const confirm = overlay.querySelector("#checkout-confirm").value;
         const consent = overlay.querySelector("#checkout-consent").checked;
 
-        const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-        const phoneOk = /^(?:\+212[67]\d{8}|0[67]\d{8})$/.test(phone);
-        const passOk = /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,64}$/.test(pass);
+        const emailOk = emailValide(email);
+        const phoneOk = telephoneValide(phone);
+        const passOk = motDePasseValide(pass);
 
-        if (parent.length < 2 || parent.length > 60) return showErr("Le nom du parent doit contenir entre 2 et 60 caractères.");
+        if (!nomValide(parent)) return showErr("Le nom du parent doit contenir entre 2 et 60 caractères.");
         if (email.length < 5 || email.length > 254) return showErr("L'email doit contenir entre 5 et 254 caractères.");
         if (!emailOk) return showErr("Email invalide.");
         if (phone.length < 10 || phone.length > 13) return showErr("Le téléphone doit contenir entre 10 et 13 caractères.");
         if (!phoneOk) return showErr("Téléphone marocain invalide : utilisez 06/07XXXXXXXX ou +2126/7XXXXXXXX.");
-        if (student.length < 2 || student.length > 60) return showErr("Le prénom de l'élève doit contenir entre 2 et 60 caractères.");
+        if (!nomValide(student)) return showErr("Le prénom de l'élève doit contenir entre 2 et 60 caractères.");
         if (!level) return showErr("Niveau de l'élève requis.");
         if (!passOk) return showErr("Mot de passe: 8+ car., 1 maj, 1 chiffre, 1 spécial.");
         if (confirm.length < 8 || confirm.length > 64) return showErr("La confirmation doit contenir entre 8 et 64 caractères.");
