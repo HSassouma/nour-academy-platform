@@ -1,33 +1,9 @@
-import { RegistrationItemMaker } from "./components.js";
-import { RegistrationsData } from "./seeds.js";
+
 import { FixedData } from "../src/data.js";
 import { nomValide, telephoneValide } from "../src/validation.js";
 
-const STORAGE_KEY = "nourAcademyRegistrations";
 const CAPACITE_MAX_GROUPE = 15;
 const STATUTS_INSCRIPTION = ["En attente", "Validée", "Payée"];
-
-// seeds data
-if (!localStorage.getItem(STORAGE_KEY)) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(RegistrationsData));
-}
-
-let data = JSON.parse(localStorage.getItem(STORAGE_KEY));
-
-// -------------- table of content ---------------
-const tableBody = document.getElementById("table-body");
-const count = document.getElementById("count");
-
-function afficherInscriptions() {
-  tableBody.innerHTML = "";
-  for (const registration of data) {
-    tableBody.innerHTML += RegistrationItemMaker(registration);
-  }
-
-  count.textContent = `${data.length} ${data.length === 1 ? "inscription" : "inscriptions"}`;
-}
-
-afficherInscriptions();
 
 // -------------- add registration form ---------------
 const successMessage = document.getElementById("registration-success");
