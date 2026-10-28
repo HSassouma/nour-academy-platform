@@ -23,6 +23,21 @@ if (nbNiveauxMigres > 0) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(Data));
 }
 
+// -------------- migration de la date d'inscription (localStorage) --------------
+// Une inscription sans date valide reçoit une date une seule fois : sa date
+// d'origine si elle existe encore (ancien champ "date"), sinon la date du jour.
+// Les dates déjà présentes ne sont jamais remplacées.
+let nbDatesMigrees = 0;
+for (const inscription of Data) {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(inscription.dateInscription)) continue;
+  inscription.dateInscription =
+    inscription.date || new Date().toISOString().slice(0, 10);
+  nbDatesMigrees += 1;
+}
+if (nbDatesMigrees > 0) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(Data));
+}
+
 // -------------- table of content ---------------
 const tableBody = document.getElementById("table-body");
 const countElement = document.getElementById("count");
@@ -48,12 +63,12 @@ function AfficherInscriptions() {
 
   resultat.sort((a, b) => {
     if (sortFilter.value === "date-asc") {
-      const diff = new Date(a.date) - new Date(b.date);
+      const diff = new Date(a.dateInscription) - new Date(b.dateInscription);
       if (diff !== 0) return diff;
       return a.id - b.id;
     }
     if (sortFilter.value === "date-desc") {
-      const diff = new Date(b.date) - new Date(a.date);
+      const diff = new Date(b.dateInscription) - new Date(a.dateInscription);
       if (diff !== 0) return diff;
       return b.id - a.id;
     }
@@ -67,7 +82,8 @@ function AfficherInscriptions() {
       if (diff !== 0) return diff;
       return b.id - a.id;
     }
-    return b.id - a.id;
+    // Tri par défaut (valeur "id-asc") : ID croissant.
+    return a.id - b.id;
   });
 
   if (countElement) {

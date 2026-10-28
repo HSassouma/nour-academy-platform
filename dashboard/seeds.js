@@ -9,7 +9,7 @@ export const RegistrationsData = [
     ],
     totalMADPerMonth: 750,
     status: "Payée",
-    date: "2026-10-08",
+    dateInscription: "2026-09-28",
   },
   {
     id: 2,
@@ -21,7 +21,7 @@ export const RegistrationsData = [
     ],
     totalMADPerMonth: 1000,
     status: "Validée",
-    date: "2026-10-09",
+    dateInscription: "2026-09-30",
   },
   {
     id: 3,
@@ -33,7 +33,7 @@ export const RegistrationsData = [
     ],
     totalMADPerMonth: 750,
     status: "En attente",
-    date: "2026-10-09",
+    dateInscription: "2026-10-02",
   },
   {
     id: 4,
@@ -45,7 +45,7 @@ export const RegistrationsData = [
     ],
     totalMADPerMonth: 850,
     status: "Payée",
-    date: "2026-10-12",
+    dateInscription: "2026-10-04",
   },
   {
     id: 5,
@@ -54,7 +54,7 @@ export const RegistrationsData = [
     courses: [{ id: 1, title: "Initiation à l'analyse et aux bases de données", priceMADPerMonth: 350 }],
     totalMADPerMonth: 350,
     status: "En attente",
-    date: "2026-10-13",
+    dateInscription: "2026-10-06",
   },
   {
     id: 6,
@@ -67,7 +67,7 @@ export const RegistrationsData = [
     ],
     totalMADPerMonth: 1400,
     status: "Validée",
-    date: "2026-10-14",
+    dateInscription: "2026-10-08",
   },
   {
     id: 7,
@@ -79,7 +79,7 @@ export const RegistrationsData = [
     ],
     totalMADPerMonth: 750,
     status: "Payée",
-    date: "2026-10-14",
+    dateInscription: "2026-10-10",
   },
   {
     id: 8,
@@ -91,7 +91,7 @@ export const RegistrationsData = [
     ],
     totalMADPerMonth: 700,
     status: "En attente",
-    date: "2026-10-15",
+    dateInscription: "2026-10-12",
   },
   {
     id: 9,
@@ -103,7 +103,7 @@ export const RegistrationsData = [
     ],
     totalMADPerMonth: 700,
     status: "Validée",
-    date: "2026-10-16",
+    dateInscription: "2026-10-14",
   },
   {
     id: 10,
@@ -115,7 +115,7 @@ export const RegistrationsData = [
     ],
     totalMADPerMonth: 900,
     status: "Payée",
-    date: "2026-10-19",
+    dateInscription: "2026-10-15",
   },
   {
     id: 11,
@@ -127,7 +127,7 @@ export const RegistrationsData = [
     ],
     totalMADPerMonth: 750,
     status: "En attente",
-    date: "2026-10-19",
+    dateInscription: "2026-10-16",
   },
   {
     id: 12,
@@ -139,7 +139,7 @@ export const RegistrationsData = [
     ],
     totalMADPerMonth: 950,
     status: "Validée",
-    date: "2026-10-20",
+    dateInscription: "2026-10-18",
   },
   {
     id: 13,
@@ -152,7 +152,7 @@ export const RegistrationsData = [
     ],
     totalMADPerMonth: 1100,
     status: "Payée",
-    date: "2026-10-21",
+    dateInscription: "2026-10-19",
   },
   {
     id: 14,
@@ -164,7 +164,7 @@ export const RegistrationsData = [
     ],
     totalMADPerMonth: 900,
     status: "En attente",
-    date: "2026-10-21",
+    dateInscription: "2026-10-20",
   },
   {
     id: 15,
@@ -176,7 +176,7 @@ export const RegistrationsData = [
     ],
     totalMADPerMonth: 750,
     status: "Validée",
-    date: "2026-10-22",
+    dateInscription: "2026-10-22",
   },
   {
     id: 16,
@@ -188,7 +188,7 @@ export const RegistrationsData = [
     ],
     totalMADPerMonth: 1000,
     status: "En attente",
-    date: "2026-10-23",
+    dateInscription: "2026-10-23",
   },
   {
     id: 17,
@@ -201,7 +201,7 @@ export const RegistrationsData = [
     ],
     totalMADPerMonth: 1450,
     status: "Payée",
-    date: "2026-10-23",
+    dateInscription: "2026-10-24",
   },
   {
     id: 18,
@@ -213,7 +213,7 @@ export const RegistrationsData = [
     ],
     totalMADPerMonth: 750,
     status: "Validée",
-    date: "2026-10-26",
+    dateInscription: "2026-10-25",
   },
   {
     id: 19,
@@ -222,7 +222,7 @@ export const RegistrationsData = [
     courses: [{ id: 6, title: "Mathématiques", priceMADPerMonth: 500 }],
     totalMADPerMonth: 500,
     status: "En attente",
-    date: "2026-10-27",
+    dateInscription: "2026-10-26",
   },
   {
     id: 20,
@@ -234,6 +234,6 @@ export const RegistrationsData = [
     ],
     totalMADPerMonth: 1000,
     status: "Payée",
-    date: "2026-10-27",
+    dateInscription: "2026-10-27",
   },
 ];

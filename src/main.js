@@ -177,6 +177,7 @@ function openCheckout() {
                 student: { name: student, level },
                 courses: savedCourses,
                 totalMADPerMonth: total,
+                dateInscription: new Date().toISOString().slice(0, 10),
             });
 
             localStorage.setItem(registrationsStorageKey, JSON.stringify(registrations));

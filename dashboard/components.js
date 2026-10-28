@@ -25,7 +25,7 @@ export function RegistrationItemMaker(item) {
                 </span>
             </td>
             <td class="whitespace-nowrap px-4 py-3 text-left">
-                ${new Date(item.date).toLocaleDateString("fr-FR")}
+                ${new Date(item.dateInscription).toLocaleDateString("fr-FR")}
             </td>
             <td class="px-4 py-3 text-center">
                 <div class="inline-flex items-center justify-center gap-1">

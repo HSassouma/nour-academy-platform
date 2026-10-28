@@ -6,7 +6,7 @@ export const REGEX_MOT_DE_PASSE = /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,64}
 
 export function nomValide(valeur) {
     const nom = valeur.trim();
-    return nom.length >= 2 && nom.length <= 60;
+    return nom.length >= 2 && nom.length <= 60 && !/\d/.test(nom);
 }
 
 export function emailValide(valeur) {
