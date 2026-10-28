@@ -40,7 +40,7 @@ if (nbDatesMigrees > 0) {
 
 // -------------- table of content ---------------
 const tableBody = document.getElementById("table-body");
-const countElement = document.getElementById("count");
+const totalElement = document.getElementById("total-inscriptions");
 
 // -------------- Filter the data ---------------
 const searchFilter = document.getElementById("search");
@@ -66,6 +66,10 @@ function precedent() {
 }
 
 function afficherInscriptions() {
+  if (totalElement) {
+    totalElement.textContent = `${Data.length} inscription${Data.length > 1 ? "s" : ""}`;
+  }
+
   const texte = searchFilter.value.trim().toLowerCase();
   const statut = statusFilter.value;
 
@@ -112,10 +116,6 @@ function afficherInscriptions() {
   // Pagination appliquée après le filtrage et le tri
   const debut = (pageActuelle - 1) * lignesParPage;
   const inscriptionsPage = resultat.slice(debut, debut + lignesParPage);
-
-  if (countElement) {
-    countElement.textContent = `${resultat.length} inscription${resultat.length > 1 ? "s" : ""} trouvée${resultat.length > 1 ? "s" : ""}`;
-  }
 
   tableBody.innerHTML = inscriptionsPage.map(RegistrationItemMaker).join("");
 
