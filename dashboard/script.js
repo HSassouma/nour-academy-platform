@@ -733,3 +733,49 @@ tableBody.addEventListener("click", function (event) {
     afficherPopupModification(editButton.getAttribute("data-id"));
   }
 });
+
+/* =============== navigation entre les vues (URL hash) ============ */
+// #/inscriptions    -> vue « Inscriptions » (contenu existant de index.html)
+// #/tableau-de-bord -> vue « Tableau de bord »
+// Toute autre valeur (ou aucune) affiche la vue Inscriptions.
+const VUES = {
+  "#/inscriptions": "vue-inscriptions",
+  "#/tableau-de-bord": "vue-tableau-de-bord",
+};
+const VUE_PAR_DEFAUT = "#/inscriptions";
+const boutonsNavigation = document.querySelectorAll("[data-route]");
+
+function afficherVue() {
+  const route = VUES[window.location.hash]
+    ? window.location.hash
+    : VUE_PAR_DEFAUT;
+
+  for (const [cle, idVue] of Object.entries(VUES)) {
+    const vue = document.getElementById(idVue);
+    if (vue) vue.classList.toggle("hidden", cle !== route);
+  }
+
+  for (const bouton of boutonsNavigation) {
+    const estActif = bouton.dataset.route === route;
+    bouton.classList.toggle("bg-amber-300", estActif);
+    bouton.classList.toggle("text-blue-900", estActif);
+    if (estActif) {
+      bouton.setAttribute("aria-current", "page");
+    } else {
+      bouton.removeAttribute("aria-current");
+    }
+  }
+}
+
+for (const bouton of boutonsNavigation) {
+  bouton.addEventListener("click", function () {
+    if (window.location.hash === bouton.dataset.route) {
+      afficherVue();
+      return;
+    }
+    window.location.hash = bouton.dataset.route;
+  });
+}
+
+window.addEventListener("hashchange", afficherVue);
+afficherVue();

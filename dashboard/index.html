@@ -15,18 +15,20 @@
     <header></header>
      <aside id="side" class="bg-blue-400 p-6 w-[300px] rounded-2xl">
         <h2 class="font-semibold text-2xl mb-3 text-amber-50">Nour <span class="text-amber-400">Academy</span></h2>
-       <div ></div>
-         <button class="btns bg-amber-50 mb-1.5 p-3 rounded-2xl font-semibold w-full hover:bg-amber-200 transition-colors text-blue-500"><a href="/dashboard/index.html">Inscriptions</a>
-
-        </button><br>
-        <button class="btns bg-amber-50 p-3 rounded-2xl w-full font-semibold  hover:bg-amber-200 transition-colors text-blue-500">
-           <a href="/dashboard/administration.html">Tableau de bord</a>
-        </button>
-       </div>
+        <nav aria-label="Navigation principale" class="flex flex-col gap-1.5">
+            <button type="button" data-route="#/inscriptions"
+                class="btns bg-amber-50 p-3 rounded-2xl font-semibold w-full hover:bg-amber-200 transition-colors text-blue-500">
+                <a href="#/inscriptions" class="block">Inscriptions</a>
+            </button>
+            <button type="button" data-route="#/tableau-de-bord"
+                class="btns bg-amber-50 p-3 rounded-2xl font-semibold w-full hover:bg-amber-200 transition-colors text-blue-500">
+                <a href="#/tableau-de-bord" class="block">Tableau de bord</a>
+            </button>
+        </nav>
     </aside>
     <main>
         
-        <section class="mx-auto max-w-6xl p-4">
+        <section id="vue-inscriptions" class="mx-auto max-w-6xl p-4">
             <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
                 <h3 class="text-xl font-bold text-3xl  text-blue-800">Inscriptions</h3>
                 <div class="flex items-center gap-3">
@@ -334,6 +336,19 @@
                     class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-blue-900 shadow-sm transition-all duration-200 ease-out hover:cursor-pointer hover:border-blue-900 hover:bg-blue-900 hover:text-white hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 active:scale-[0.98] active:border-blue-800 active:bg-blue-800 active:text-white active:shadow-sm disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-400 disabled:opacity-70 disabled:shadow-none disabled:scale-100 disabled:hover:border-gray-200 disabled:hover:bg-gray-50 disabled:hover:text-gray-400 disabled:hover:shadow-none">
                     Suivant
                 </button>
+            </div>
+        </section>
+
+        <!-- Vue « Tableau de bord » : même zone principale, affichée via #/tableau-de-bord -->
+        <section id="vue-tableau-de-bord" class="mx-auto hidden max-w-6xl p-4">
+            <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+                <h3 class="text-xl font-bold text-3xl text-blue-800">Tableau de bord</h3>
+            </div>
+
+            <div class="rounded-xl border border-gray-300 bg-white p-6 text-center shadow-sm">
+                <i class="fa-solid fa-chart-line mb-3 text-3xl text-blue-200" aria-hidden="true"></i>
+                <p class="font-semibold text-blue-900">Vue d'ensemble de Nour Academy</p>
+                <p class="mt-1 text-sm text-gray-500">Les indicateurs du tableau de bord s'afficheront ici.</p>
             </div>
         </section>
     </main>
