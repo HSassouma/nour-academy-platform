@@ -1,82 +1,99 @@
+/* =============== ahmed start ============ */
+
 import { RegistrationItemMaker } from "./components.js";
 import { RegistrationsData } from "./seeds.js";
-import { FixedData } from "../src/data.js";
-import { nomValide, telephoneValide } from "../src/validation.js";
 
 const STORAGE_KEY = "nourAcademyRegistrations";
-const CAPACITE_MAX_GROUPE = 15;
-const STATUTS_INSCRIPTION = ["En attente", "Validée", "Payée"];
 
-// seeds data
-if (!localStorage.getItem(STORAGE_KEY)) {
+// -------------- seeds data ---------------------
+if (!localStorage.getItem(STORAGE_KEY) || (localStorage.getItem(STORAGE_KEY) && localStorage.getItem(STORAGE_KEY).length === 0)) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(RegistrationsData));
 }
 
-let data = JSON.parse(localStorage.getItem(STORAGE_KEY));
-
-// Migration des inscriptions héritées : les dossiers fictifs enregistrés avant
-// l'ajout du statut n'en possèdent pas. On leur applique alors le statut par
-// défaut "En attente" sans jamais écraser un statut déjà défini ou modifié par
-// la secrétaire, et donc sans réinitialiser les statuts à chaque chargement.
-function appliquerStatutParDefaut() {
-  let migrationNecessaire = false;
-
-  for (const registration of data) {
-    const statut = registration.status;
-    if (typeof statut !== "string" || statut.trim() === "") {
-      registration.status = "En attente";
-      migrationNecessaire = true;
-    }
-  }
-
-  if (migrationNecessaire) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  }
-}
-
-appliquerStatutParDefaut();
+let Data = JSON.parse(localStorage.getItem(STORAGE_KEY));
 
 // -------------- table of content ---------------
 const tableBody = document.getElementById("table-body");
-const count = document.getElementById("count");
+const countElement = document.getElementById("count");
 
-function statutBadgeHtml(statut) {
-  let couleurFond = "bg-gray-100";
-  let couleurTexte = "text-gray-700";
+// -------------- Filter the data ---------------
+const searchFilter = document.getElementById("search");
+const statusFilter = document.getElementById("status");
+const sortFilter = document.getElementById("sort");
 
-  if (statut === "En attente") {
-    couleurFond = "bg-yellow-100";
-    couleurTexte = "text-yellow-800";
-  } else if (statut === "Validée") {
-    couleurFond = "bg-green-100";
-    couleurTexte = "text-green-700";
-  } else if (statut === "Payée") {
-    couleurFond = "bg-blue-100";
-    couleurTexte = "text-blue-700";
+function AfficherInscriptions() {
+  const texte = searchFilter.value.trim().toLowerCase();
+  const statut = statusFilter.value;
+
+  const resultat = Data.filter(
+    (registration) =>
+      (!texte ||
+        String(registration.id).includes(texte) ||
+        registration.parent.name.toLowerCase().includes(texte) ||
+        registration.parent.phone.toLowerCase().includes(texte) ||
+        registration.student.name.toLowerCase().includes(texte)) &&
+      (!statut || registration.status === statut),
+  );
+
+  resultat.sort((a, b) => {
+    if (sortFilter.value === "date-asc") {
+      const diff = new Date(a.date) - new Date(b.date);
+      if (diff !== 0) return diff;
+      return a.id - b.id;
+    }
+    if (sortFilter.value === "date-desc") {
+      const diff = new Date(b.date) - new Date(a.date);
+      if (diff !== 0) return diff;
+      return b.id - a.id;
+    }
+    if (sortFilter.value === "name-asc") {
+      const diff = a.student.name.localeCompare(b.student.name);
+      if (diff !== 0) return diff;
+      return a.id - b.id;
+    }
+    if (sortFilter.value === "name-desc") {
+      const diff = b.student.name.localeCompare(a.student.name);
+      if (diff !== 0) return diff;
+      return b.id - a.id;
+    }
+    return b.id - a.id;
+  });
+
+  if (countElement) {
+    countElement.textContent = `${resultat.length} inscription${resultat.length > 1 ? "s" : ""} trouvée${resultat.length > 1 ? "s" : ""}`;
   }
 
-  const affichage = statut || "En attente";
-  return `<span class="rounded-full ${couleurFond} px-2.5 py-1 text-xs font-medium ${couleurTexte}">${affichage}</span>`;
+  tableBody.innerHTML = resultat.map(RegistrationItemMaker).join("");
 }
 
-function afficherInscriptions() {
-  tableBody.innerHTML = "";
-  for (const registration of data) {
-    const rowHtml = RegistrationItemMaker(registration);
+searchFilter.addEventListener("input", AfficherInscriptions);
+statusFilter.addEventListener("change", AfficherInscriptions);
+sortFilter.addEventListener("change", AfficherInscriptions);
 
-    const statusHtml = statutBadgeHtml(registration.status);
-    const patchedHtml = rowHtml.replace(
-      /<span class="rounded-full bg-red-100 px-2\.5 py-1 text-xs font-medium text-red-700">\s*Impayé\s*<\/span>/,
-      statusHtml,
-    );
+AfficherInscriptions();
 
-    tableBody.innerHTML += patchedHtml;
-  }
+// -------------- Delet Item from local storage and front ---------------
+tableBody.addEventListener("click", (event) => {
+  const button = event.target.closest('[data-action="delete"]');
+  if (!button) return;
 
-  count.textContent = `${data.length} ${data.length === 1 ? "inscription" : "inscriptions"}`;
-}
+  Data = Data.filter(
+    (registration) => String(registration.id) !== button.dataset.id,
+  );
 
-afficherInscriptions();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(Data));
+  AfficherInscriptions();
+});
+
+/* =============== ahmed end ============ */
+
+const CAPACITE_MAX_GROUPE = 15;
+const STATUTS_INSCRIPTION = ["En attente", "Validée", "Payée"];
+
+
+import { FixedData } from "../src/data.js";
+import { nomValide, telephoneValide } from "../src/validation.js";
+
 
 // -------------- add registration form ---------------
 const successMessage = document.getElementById("registration-success");
@@ -198,8 +215,8 @@ function remplirCoursParNiveau(niveau) {
 function afficherInscription() {
   effacerToutesLesErreurs();
 
-  const prochainId = data.length
-    ? Math.max(...data.map((registration) => Number(registration.id))) + 1
+  const prochainId = Data.length
+    ? Math.max(...Data.map((registration) => Number(registration.id))) + 1
     : 1;
 
   dossierInput.value = prochainId;
@@ -319,7 +336,7 @@ form.addEventListener("submit", function (event) {
   if (!formulaireValide) return;
 
   // Contrôle des doublons
-  const inscriptionExiste = data.some(
+  const inscriptionExiste = Data.some(
     (registration) =>
       registration.student.name.toLowerCase() === nomEleve.toLowerCase() &&
       registration.courses.some(
@@ -335,7 +352,7 @@ form.addEventListener("submit", function (event) {
   }
 
   // Contrôle de la capacité maximale du groupe
-  const nombreDansGroupe = data.filter(
+  const nombreDansGroupe = Data.filter(
     (registration) =>
       String(registration.student.level) === String(niveau) &&
       registration.courses.some(
@@ -372,17 +389,18 @@ form.addEventListener("submit", function (event) {
     dateInscription: new Date().toISOString().slice(0, 10),
   };
 
-  data.push(nouvelleInscription);
+  Data.push(nouvelleInscription);
 
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(Data));
 
-  afficherInscriptions();
-
+  
   form.reset();
   fermerInscription();
-
+  
   successMessage.textContent = "L'inscription a été ajoutée avec succès !";
   successMessage.classList.remove("hidden");
+  
+  AfficherInscriptions();
 });
 
 // -------------- edit registration popup ---------------
@@ -491,9 +509,9 @@ function effacerErreursEdit() {
 
 // 1. Afficher le popup de modification
 function afficherPopupModification(id) {
-  data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+  Data = JSON.parse(localStorage.getItem(STORAGE_KEY));
 
-  const inscription = data.find(
+  const inscription = Data.find(
     (registration) => Number(registration.id) === Number(id),
   );
 
@@ -653,7 +671,7 @@ function modifierInscription(event) {
   if (!formulaireValide) return;
 
   // Contrôle des doublons (exclut l'inscription en cours de modification)
-  const inscriptionExiste = data.some(
+  const inscriptionExiste = Data.some(
     (registration) =>
       Number(registration.id) !== id &&
       registration.student.name.toLowerCase() === nomEleve.toLowerCase() &&
@@ -669,7 +687,7 @@ function modifierInscription(event) {
   }
 
   // Contrôle de la capacité maximale (exclut l'inscription modifiée)
-  const nombreDansGroupe = data.filter(
+  const nombreDansGroupe = Data.filter(
     (registration) =>
       Number(registration.id) !== id &&
       String(registration.student.level) === String(niveau) &&
@@ -686,21 +704,21 @@ function modifierInscription(event) {
   }
 
   // Mise à jour de l'inscription existante
-  const index = data.findIndex(
+  const index = Data.findIndex(
     (registration) => Number(registration.id) === id,
   );
 
   if (index === -1) return;
 
-  data[index] = {
-    ...data[index],
+  Data[index] = {
+    ...Data[index],
     parent: {
-      ...data[index].parent,
+      ...Data[index].parent,
       name: nomParent,
       phone: telephoneParent,
     },
     student: {
-      ...data[index].student,
+      ...Data[index].student,
       name: nomEleve,
       level: niveau,
     },
@@ -715,9 +733,9 @@ function modifierInscription(event) {
     status: statut,
   };
 
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(Data));
 
-  afficherInscriptions();
+  AfficherInscriptions();
   fermerPopupModification();
 
   successMessage.textContent = "L'inscription a été modifiée avec succès !";
@@ -725,6 +743,7 @@ function modifierInscription(event) {
 }
 
 editForm.addEventListener("submit", modifierInscription);
+
 
 // Event delegation : clic sur "Modifier" dans le tableau
 tableBody.addEventListener("click", function (event) {
