@@ -2,6 +2,8 @@
 
 import { RegistrationItemMaker } from "./components.js";
 import { RegistrationsData } from "./seeds.js";
+import { FixedData, migrerNiveaux } from "../src/data.js";
+import { nomValide, telephoneValide } from "../src/validation.js";
 
 const STORAGE_KEY = "nourAcademyRegistrations";
 
@@ -11,6 +13,15 @@ if (!localStorage.getItem(STORAGE_KEY) || (localStorage.getItem(STORAGE_KEY) && 
 }
 
 let Data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+
+// -------------- migration des anciens niveaux (localStorage) --------------
+// Seul "Bac" devient "2BAC". "Lycée", "Tous niveaux" et les valeurs inconnues
+// sont conservés : sans information fiable, on ne devine pas le niveau.
+// Aucune inscription n'est supprimée et les autres données restent intactes.
+const nbNiveauxMigres = migrerNiveaux(Data);
+if (nbNiveauxMigres > 0) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(Data));
+}
 
 // -------------- table of content ---------------
 const tableBody = document.getElementById("table-body");
@@ -90,11 +101,6 @@ tableBody.addEventListener("click", (event) => {
 const CAPACITE_MAX_GROUPE = 15;
 const STATUTS_INSCRIPTION = ["En attente", "Validée", "Payée"];
 
-
-import { FixedData } from "../src/data.js";
-import { nomValide, telephoneValide } from "../src/validation.js";
-
-
 // -------------- add registration form ---------------
 const successMessage = document.getElementById("registration-success");
 const formError = document.getElementById("registration-form-error");
@@ -148,7 +154,7 @@ studentNameInput.addEventListener("input", function () {
 levelSelect.addEventListener("change", function () {
   errorLevel.textContent = "";
   errorLevel.classList.add("hidden");
-  remplirCoursParNiveau(this.value);
+  remplirCoursParNiveau(courseSelect, this.value);
   // Efface aussi l'erreur du cours si le niveau change
   errorCourse.textContent = "";
   errorCourse.classList.add("hidden");
@@ -174,40 +180,17 @@ statusSelect.addEventListener("change", function () {
   errorStatus.classList.add("hidden");
 });
 
-function remplirCoursParNiveau(niveau) {
-  courseSelect.innerHTML = '<option value="">Choisir un cours</option>';
+// Remplit un select de cours avec les cours du niveau choisi (4 par niveau).
+function remplirCoursParNiveau(select, niveau) {
+  select.innerHTML = '<option value="">Choisir un cours</option>';
 
   if (!niveau) return;
 
-  // Pour Primaire : aucun cours dans FixedData
-  if (niveau === "Primaire") {
-    const option = document.createElement("option");
-    option.value = "";
-    option.textContent = "Aucun cours disponible pour ce niveau";
-    option.disabled = true;
-    courseSelect.appendChild(option);
-    return;
-  }
-
-  // Pour Bac : seuls les cours "Tous niveaux" sont disponibles
-  const coursFiltres = FixedData.filter(
-    (course) => course.level === niveau || course.level === "Tous niveaux",
-  );
-
-  if (coursFiltres.length === 0) {
-    const option = document.createElement("option");
-    option.value = "";
-    option.textContent = "Aucun cours disponible pour ce niveau";
-    option.disabled = true;
-    courseSelect.appendChild(option);
-    return;
-  }
-
-  for (const course of coursFiltres) {
+  for (const course of FixedData.filter((course) => course.level === niveau)) {
     const option = document.createElement("option");
     option.value = course.id;
     option.textContent = `${course.subject} — ${course.level} — ${course.price} MAD/mois`;
-    courseSelect.appendChild(option);
+    select.appendChild(option);
   }
 }
 
@@ -220,7 +203,7 @@ function afficherInscription() {
     : 1;
 
   dossierInput.value = prochainId;
-  remplirCoursParNiveau(levelSelect.value);
+  remplirCoursParNiveau(courseSelect, levelSelect.value);
   formOverlay.classList.remove("hidden");
   formContainer.classList.remove("hidden");
 }
@@ -270,30 +253,11 @@ form.addEventListener("submit", function (event) {
 
   // Validation du cours
   if (!courseSelect.value) {
-    if (niveau && niveau !== "Primaire" && niveau !== "Bac") {
-      // Pour les niveaux avec des cours, c'est un vrai choix obligatoire
-      const coursDisponibles = FixedData.filter(
-        (course) => course.level === niveau || course.level === "Tous niveaux",
-      );
-      if (coursDisponibles.length > 0) {
-        errorCourse.textContent = "Veuillez choisir un cours.";
-        errorCourse.classList.remove("hidden");
-        formulaireValide = false;
-      }
-    } else if (niveau === "Primaire") {
-      errorCourse.textContent = "Aucun cours disponible pour le niveau Primaire.";
-      errorCourse.classList.remove("hidden");
-      formulaireValide = false;
-    } else if (niveau === "Bac") {
-      const coursDisponibles = FixedData.filter(
-        (course) => course.level === "Tous niveaux",
-      );
-      if (coursDisponibles.length > 0) {
-        errorCourse.textContent = "Veuillez choisir un cours.";
-        errorCourse.classList.remove("hidden");
-        formulaireValide = false;
-      }
-    }
+    errorCourse.textContent = niveau
+      ? "Veuillez choisir un cours."
+      : "Veuillez d'abord choisir un niveau.";
+    errorCourse.classList.remove("hidden");
+    formulaireValide = false;
   } else if (!coursChoisi) {
     errorCourse.textContent = "Le cours sélectionné n'existe pas.";
     errorCourse.classList.remove("hidden");
@@ -434,7 +398,7 @@ editStudentNameInput.addEventListener("input", function () {
 editLevelSelect.addEventListener("change", function () {
   editErrorLevel.textContent = "";
   editErrorLevel.classList.add("hidden");
-  remplirEditCoursParNiveau(this.value);
+  remplirCoursParNiveau(editCourseSelect, this.value);
   editErrorCourse.textContent = "";
   editErrorCourse.classList.add("hidden");
 });
@@ -454,41 +418,6 @@ editStatusSelect.addEventListener("change", function () {
   editErrorStatus.textContent = "";
   editErrorStatus.classList.add("hidden");
 });
-
-function remplirEditCoursParNiveau(niveau) {
-  editCourseSelect.innerHTML = '<option value="">Choisir un cours</option>';
-
-  if (!niveau) return;
-
-  if (niveau === "Primaire") {
-    const option = document.createElement("option");
-    option.value = "";
-    option.textContent = "Aucun cours disponible pour ce niveau";
-    option.disabled = true;
-    editCourseSelect.appendChild(option);
-    return;
-  }
-
-  const coursFiltres = FixedData.filter(
-    (course) => course.level === niveau || course.level === "Tous niveaux",
-  );
-
-  if (coursFiltres.length === 0) {
-    const option = document.createElement("option");
-    option.value = "";
-    option.textContent = "Aucun cours disponible pour ce niveau";
-    option.disabled = true;
-    editCourseSelect.appendChild(option);
-    return;
-  }
-
-  for (const course of coursFiltres) {
-    const option = document.createElement("option");
-    option.value = course.id;
-    option.textContent = `${course.subject} — ${course.level} — ${course.price} MAD/mois`;
-    editCourseSelect.appendChild(option);
-  }
-}
 
 function effacerErreursEdit() {
   editErrorStudentName.textContent = "";
@@ -528,10 +457,21 @@ function afficherPopupModification(id) {
   editStudentNameInput.value = inscription.student.name;
   editLevelSelect.value = inscription.student.level;
 
-  remplirEditCoursParNiveau(inscription.student.level);
+  remplirCoursParNiveau(editCourseSelect, inscription.student.level);
 
-  if (inscription.courses && inscription.courses.length > 0) {
-    editCourseSelect.value = inscription.courses[0].id;
+  // Ne présélectionne le cours que s'il existe encore dans le catalogue actuel :
+  // une ancienne inscription peut référencer un cours qui n'existe plus.
+  const coursEnregistre = inscription.courses && inscription.courses[0];
+  if (coursEnregistre) {
+    const coursCatalogue = FixedData.find(
+      (course) => String(course.id) === String(coursEnregistre.id),
+    );
+    if (
+      coursCatalogue &&
+      String(coursEnregistre.title).startsWith(coursCatalogue.subject)
+    ) {
+      editCourseSelect.value = coursCatalogue.id;
+    }
   }
 
   editParentNameInput.value = inscription.parent.name;
@@ -600,31 +540,11 @@ function modifierInscription(event) {
 
   // Validation du cours
   if (!editCourseSelect.value) {
-    if (niveau && niveau !== "Primaire" && niveau !== "Bac") {
-      const coursDisponibles = FixedData.filter(
-        (course) =>
-          course.level === niveau || course.level === "Tous niveaux",
-      );
-      if (coursDisponibles.length > 0) {
-        editErrorCourse.textContent = "Veuillez choisir un cours.";
-        editErrorCourse.classList.remove("hidden");
-        formulaireValide = false;
-      }
-    } else if (niveau === "Primaire") {
-      editErrorCourse.textContent =
-        "Aucun cours disponible pour le niveau Primaire.";
-      editErrorCourse.classList.remove("hidden");
-      formulaireValide = false;
-    } else if (niveau === "Bac") {
-      const coursDisponibles = FixedData.filter(
-        (course) => course.level === "Tous niveaux",
-      );
-      if (coursDisponibles.length > 0) {
-        editErrorCourse.textContent = "Veuillez choisir un cours.";
-        editErrorCourse.classList.remove("hidden");
-        formulaireValide = false;
-      }
-    }
+    editErrorCourse.textContent = niveau
+      ? "Veuillez choisir un cours."
+      : "Veuillez d'abord choisir un niveau.";
+    editErrorCourse.classList.remove("hidden");
+    formulaireValide = false;
   } else if (!coursChoisi) {
     editErrorCourse.textContent = "Le cours sélectionné n'existe pas.";
     editErrorCourse.classList.remove("hidden");
