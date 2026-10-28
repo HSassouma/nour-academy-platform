@@ -47,7 +47,25 @@ const searchFilter = document.getElementById("search");
 const statusFilter = document.getElementById("status");
 const sortFilter = document.getElementById("sort");
 
-function AfficherInscriptions() {
+// -------------- Pagination ---------------
+let pageActuelle = 1;
+const lignesParPage = 10;
+
+const pageInfo = document.getElementById("page-info");
+const boutonPrecedent = document.getElementById("page-precedent");
+const boutonSuivant = document.getElementById("page-suivant");
+
+function suivant() {
+  pageActuelle += 1;
+  afficherInscriptions();
+}
+
+function precedent() {
+  pageActuelle -= 1;
+  afficherInscriptions();
+}
+
+function afficherInscriptions() {
   const texte = searchFilter.value.trim().toLowerCase();
   const statut = statusFilter.value;
 
@@ -86,18 +104,45 @@ function AfficherInscriptions() {
     return a.id - b.id;
   });
 
+  // Nombre total de pages (au moins 1 pour rester cohérent si la liste est vide)
+  const nombreDePages = Math.max(1, Math.ceil(resultat.length / lignesParPage));
+  if (pageActuelle > nombreDePages) pageActuelle = nombreDePages;
+  if (pageActuelle < 1) pageActuelle = 1;
+
+  // Pagination appliquée après le filtrage et le tri
+  const debut = (pageActuelle - 1) * lignesParPage;
+  const inscriptionsPage = resultat.slice(debut, debut + lignesParPage);
+
   if (countElement) {
     countElement.textContent = `${resultat.length} inscription${resultat.length > 1 ? "s" : ""} trouvée${resultat.length > 1 ? "s" : ""}`;
   }
 
-  tableBody.innerHTML = resultat.map(RegistrationItemMaker).join("");
+  tableBody.innerHTML = inscriptionsPage.map(RegistrationItemMaker).join("");
+
+  // Informations et état des boutons de pagination
+  pageInfo.textContent = `Page ${pageActuelle} sur ${nombreDePages}`;
+  boutonPrecedent.disabled = pageActuelle <= 1;
+  boutonSuivant.disabled = pageActuelle >= nombreDePages;
 }
 
-searchFilter.addEventListener("input", AfficherInscriptions);
-statusFilter.addEventListener("change", AfficherInscriptions);
-sortFilter.addEventListener("change", AfficherInscriptions);
+boutonPrecedent.addEventListener("click", precedent);
+boutonSuivant.addEventListener("click", suivant);
 
-AfficherInscriptions();
+// Un changement de recherche, de statut ou de tri ramène à la première page
+searchFilter.addEventListener("input", () => {
+  pageActuelle = 1;
+  afficherInscriptions();
+});
+statusFilter.addEventListener("change", () => {
+  pageActuelle = 1;
+  afficherInscriptions();
+});
+sortFilter.addEventListener("change", () => {
+  pageActuelle = 1;
+  afficherInscriptions();
+});
+
+afficherInscriptions();
 
 // -------------- Delet Item from local storage and front ---------------
 tableBody.addEventListener("click", (event) => {
@@ -109,7 +154,7 @@ tableBody.addEventListener("click", (event) => {
   );
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(Data));
-  AfficherInscriptions();
+  afficherInscriptions();
 });
 
 /* =============== ahmed end ============ */
@@ -380,7 +425,7 @@ form.addEventListener("submit", function (event) {
   successMessage.textContent = "L'inscription a été ajoutée avec succès !";
   successMessage.classList.remove("hidden");
   
-  AfficherInscriptions();
+  afficherInscriptions();
 });
 
 // -------------- edit registration popup ---------------
@@ -671,7 +716,7 @@ function modifierInscription(event) {
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(Data));
 
-  AfficherInscriptions();
+  afficherInscriptions();
   fermerPopupModification();
 
   successMessage.textContent = "L'inscription a été modifiée avec succès !";
