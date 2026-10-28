@@ -1,6 +1,6 @@
 export const RegistrationsData = [
   {
-    "id": 1,
+    "id": "ID-1",
     "parent": {
       "name": "Fatima",
       "email": "fatima.z@gmail.com",
@@ -17,7 +17,7 @@ export const RegistrationsData = [
     "totalMADPerMonth": 750
   },
   {
-    "id": 2,
+    "id": "ID-2",
     "parent": {
       "name": "Rachid",
       "email": "rachid.alami@gmail.com",
@@ -34,7 +34,7 @@ export const RegistrationsData = [
     "totalMADPerMonth": 1000
   },
   {
-    "id": 3,
+    "id": "ID-3",
     "parent": {
       "name": "Khadija",
       "email": "khadija.ben@gmail.com",
@@ -51,7 +51,7 @@ export const RegistrationsData = [
     "totalMADPerMonth": 800
   },
   {
-    "id": 4,
+    "id": "ID-4",
     "parent": {
       "name": "Youssef",
       "email": "youssef.tazi@gmail.com",
@@ -68,7 +68,7 @@ export const RegistrationsData = [
     "totalMADPerMonth": 1000
   },
   {
-    "id": 5,
+    "id": "ID-5",
     "parent": {
       "name": "Malika",
       "email": "malika.ch@gmail.com",
@@ -84,7 +84,7 @@ export const RegistrationsData = [
     "totalMADPerMonth": 350
   },
   {
-    "id": 6,
+    "id": "ID-6",
     "parent": {
       "name": "Hassan",
       "email": "hassan.idrissi@gmail.com",
@@ -102,7 +102,7 @@ export const RegistrationsData = [
     "totalMADPerMonth": 1300
   },
   {
-    "id": 7,
+    "id": "ID-7",
     "parent": {
       "name": "Souad",
       "email": "souad.bennani@gmail.com",
@@ -119,7 +119,7 @@ export const RegistrationsData = [
     "totalMADPerMonth": 850
   },
   {
-    "id": 8,
+    "id": "ID-8",
     "parent": {
       "name": "Brahim",
       "email": "brahim.k@gmail.com",
@@ -136,7 +136,7 @@ export const RegistrationsData = [
     "totalMADPerMonth": 800
   },
   {
-    "id": 9,
+    "id": "ID-9",
     "parent": {
       "name": "Nezha",
       "email": "nezha.f@gmail.com",
@@ -153,7 +153,7 @@ export const RegistrationsData = [
     "totalMADPerMonth": 700
   },
   {
-    "id": 10,
+    "id": "ID-10",
     "parent": {
       "name": "Mohammed",
       "email": "m.elamrani@gmail.com",
@@ -170,7 +170,7 @@ export const RegistrationsData = [
     "totalMADPerMonth": 900
   },
   {
-    "id": 11,
+    "id": "ID-11",
     "parent": {
       "name": "Latifa",
       "email": "latifa.zahiri@gmail.com",
@@ -187,7 +187,7 @@ export const RegistrationsData = [
     "totalMADPerMonth": 750
   },
   {
-    "id": 12,
+    "id": "ID-12",
     "parent": {
       "name": "Adil",
       "email": "adil.bakkali@gmail.com",
@@ -203,7 +203,7 @@ export const RegistrationsData = [
     "totalMADPerMonth": 600
   },
   {
-    "id": 13,
+    "id": "ID-13",
     "parent": {
       "name": "Karima",
       "email": "karima.j@gmail.com",
@@ -221,7 +221,7 @@ export const RegistrationsData = [
     "totalMADPerMonth": 1150
   },
   {
-    "id": 14,
+    "id": "ID-14",
     "parent": {
       "name": "Driss",
       "email": "driss.laraki@gmail.com",
@@ -238,7 +238,7 @@ export const RegistrationsData = [
     "totalMADPerMonth": 900
   },
   {
-    "id": 15,
+    "id": "ID-15",
     "parent": {
       "name": "Samira",
       "email": "samira.bel@gmail.com",
@@ -255,7 +255,7 @@ export const RegistrationsData = [
     "totalMADPerMonth": 700
   },
   {
-    "id": 16,
+    "id": "ID-16",
     "parent": {
       "name": "Anouar",
       "email": "anouar.h@gmail.com",
@@ -272,7 +272,7 @@ export const RegistrationsData = [
     "totalMADPerMonth": 850
   },
   {
-    "id": 17,
+    "id": "ID-17",
     "parent": {
       "name": "Bouchra",
       "email": "bouchra.m@gmail.com",
@@ -290,7 +290,7 @@ export const RegistrationsData = [
     "totalMADPerMonth": 1500
   },
   {
-    "id": 18,
+    "id": "ID-18",
     "parent": {
       "name": "Tarik",
       "email": "tarik.senhaji@gmail.com",
@@ -307,7 +307,7 @@ export const RegistrationsData = [
     "totalMADPerMonth": 800
   },
   {
-    "id": 19,
+    "id": "ID-19",
     "parent": {
       "name": "Amina",
       "email": "amina.k@gmail.com",
@@ -323,7 +323,7 @@ export const RegistrationsData = [
     "totalMADPerMonth": 500
   },
   {
-    "id": 20,
+    "id": "ID-20",
     "parent": {
       "name": "Rachida",
       "email": "rachida.ouazzani@gmail.com",
