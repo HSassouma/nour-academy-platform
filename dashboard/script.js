@@ -737,10 +737,7 @@ tableBody.addEventListener("click", function (event) {
   }
 });
 
-/* =============== navigation entre les vues (URL hash) ============ */
-// #/inscriptions    -> vue « Inscriptions » (contenu existant de index.html)
-// #/tableau-de-bord -> vue « Tableau de bord »
-// Toute autre valeur (ou aucune) affiche la vue Inscriptions.
+
 const VUES = {
   "#/inscriptions": "vue-inscriptions",
   "#/tableau-de-bord": "vue-tableau-de-bord",
