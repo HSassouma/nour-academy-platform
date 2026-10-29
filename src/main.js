@@ -16,11 +16,15 @@ let state = {
     recherche: "",
 };
 
-[nivaux, matier].forEach(el => el.addEventListener("change", () => {
+nivaux.addEventListener("change", () => {
     state.nivaux = nivaux.value;
+    setCources(state);
+});
+
+matier.addEventListener("change", () => {
     state.matier = matier.value;
     setCources(state);
-}));
+});
 
 search.addEventListener("input", () => {
     state.recherche = search.value.trim().toLowerCase();
