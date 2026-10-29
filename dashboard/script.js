@@ -155,6 +155,7 @@ tableBody.addEventListener("click", (event) => {
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(Data));
   afficherInscriptions();
+  actualiserKPI();
 });
 
 /* =============== ahmed end ============ */
@@ -426,6 +427,7 @@ form.addEventListener("submit", function (event) {
   successMessage.classList.remove("hidden");
   
   afficherInscriptions();
+  actualiserKPI();
 });
 
 // -------------- edit registration popup ---------------
@@ -717,6 +719,7 @@ function modifierInscription(event) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(Data));
 
   afficherInscriptions();
+  actualiserKPI();
   fermerPopupModification();
 
   successMessage.textContent = "L'inscription a été modifiée avec succès !";
@@ -779,3 +782,29 @@ for (const bouton of boutonsNavigation) {
 
 window.addEventListener("hashchange", afficherVue);
 afficherVue();
+// function cards
+let totalInscriptions = 0;
+let totalRecettes = 0;
+let totalAttente = 0;
+let totalPayee = 0;
+
+const spanNombreInscrits = document.getElementById("Nombre_inscrits");
+const spanTotalMontant = document.getElementById("totale_manton");
+const spanAttente = document.getElementById("attente");
+const spanPayee = document.getElementById("payee");
+
+function actualiserKPI() {
+    totalInscriptions = Data.length;
+
+    totalRecettes = Data.filter(inscription => inscription.status === "Payée").reduce((total, inscription) => total + Number(inscription.totalMADPerMonth || 0), 0);
+    totalAttente = Data.filter(inscription => inscription.status === "En attente").length;
+
+    totalPayee = Data.filter(inscription => inscription.status === "Payée").length;
+
+    spanNombreInscrits.textContent = totalInscriptions;
+    spanTotalMontant.textContent = `${totalRecettes} DH`;
+    spanAttente.textContent = totalAttente;
+    spanPayee.textContent = totalPayee;
+}
+
+window.addEventListener("load", actualiserKPI);
