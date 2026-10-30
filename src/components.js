@@ -127,10 +127,9 @@ export function CheckoutModalMaker() {
             <input id="checkout-student" type="text" placeholder="Prénom de l'élève" minlength="2" maxlength="60" required class="rounded-lg border border-black px-3 py-2" />
             <select id="checkout-level" required class="rounded-lg border border-black px-3 py-2">
                 <option value="">Niveau de l'élève</option>
-                <option value="Primaire">Primaire</option>
                 <option value="Collège">Collège</option>
-                <option value="Lycée">Lycée</option>
-                <option value="Bac">Bac</option>
+                <option value="1BAC">1BAC</option>
+                <option value="2BAC">2BAC</option>
             </select>
             <input id="checkout-password" type="password" placeholder="Mot de passe" pattern="(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,64}" minlength="8" maxlength="64" required class="rounded-lg border border-black px-3 py-2" />
             <input id="checkout-confirm" type="password" placeholder="Confirmation" minlength="8" maxlength="64" required class="rounded-lg border border-black px-3 py-2" />
