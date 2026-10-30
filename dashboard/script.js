@@ -6,6 +6,8 @@ import { FixedData, migrerNiveaux } from "../src/data.js";
 import { nomValide, telephoneValide } from "../src/validation.js";
 
 const STORAGE_KEY = "nourAcademyRegistrations";
+const CAPACITE_MAX_GROUPE = 15;
+const STATUTS_INSCRIPTION = ["En attente", "Validée", "Payée"];
 
 // -------------- seeds data ---------------------
 if (!localStorage.getItem(STORAGE_KEY) || (localStorage.getItem(STORAGE_KEY) && localStorage.getItem(STORAGE_KEY).length === 0)) {
@@ -13,30 +15,6 @@ if (!localStorage.getItem(STORAGE_KEY) || (localStorage.getItem(STORAGE_KEY) && 
 }
 
 let Data = JSON.parse(localStorage.getItem(STORAGE_KEY));
-
-// -------------- migration des anciens niveaux (localStorage) --------------
-// Seul "Bac" devient "2BAC". "Lycée", "Tous niveaux" et les valeurs inconnues
-// sont conservés : sans information fiable, on ne devine pas le niveau.
-// Aucune inscription n'est supprimée et les autres données restent intactes.
-const nbNiveauxMigres = migrerNiveaux(Data);
-if (nbNiveauxMigres > 0) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(Data));
-}
-
-// -------------- migration de la date d'inscription (localStorage) --------------
-// Une inscription sans date valide reçoit une date une seule fois : sa date
-// d'origine si elle existe encore (ancien champ "date"), sinon la date du jour.
-// Les dates déjà présentes ne sont jamais remplacées.
-let nbDatesMigrees = 0;
-for (const inscription of Data) {
-  if (/^\d{4}-\d{2}-\d{2}$/.test(inscription.dateInscription)) continue;
-  inscription.dateInscription =
-    inscription.date || new Date().toISOString().slice(0, 10);
-  nbDatesMigrees += 1;
-}
-if (nbDatesMigrees > 0) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(Data));
-}
 
 // -------------- table of content ---------------
 const tableBody = document.getElementById("table-body");
@@ -104,22 +82,22 @@ function afficherInscriptions() {
       if (diff !== 0) return diff;
       return b.id - a.id;
     }
-    // Tri par défaut (valeur "id-asc") : ID croissant.
+
     return a.id - b.id;
   });
 
-  // Nombre total de pages (au moins 1 pour rester cohérent si la liste est vide)
+  // Nombre total de pages
   const nombreDePages = Math.max(1, Math.ceil(resultat.length / lignesParPage));
   if (pageActuelle > nombreDePages) pageActuelle = nombreDePages;
   if (pageActuelle < 1) pageActuelle = 1;
 
-  // Pagination appliquée après le filtrage et le tri
+  // Pagination
   const debut = (pageActuelle - 1) * lignesParPage;
   const inscriptionsPage = resultat.slice(debut, debut + lignesParPage);
 
   tableBody.innerHTML = inscriptionsPage.map(RegistrationItemMaker).join("");
 
-  // Informations et état des boutons de pagination
+  // Informations et etat des boutons de pagination
   pageInfo.textContent = `Page ${pageActuelle} sur ${nombreDePages}`;
   boutonPrecedent.disabled = pageActuelle <= 1;
   boutonSuivant.disabled = pageActuelle >= nombreDePages;
@@ -128,7 +106,7 @@ function afficherInscriptions() {
 boutonPrecedent.addEventListener("click", precedent);
 boutonSuivant.addEventListener("click", suivant);
 
-// Un changement de recherche, de statut ou de tri ramène à la première page
+// Un changement de recherche
 searchFilter.addEventListener("input", () => {
   pageActuelle = 1;
   afficherInscriptions();
@@ -159,9 +137,6 @@ tableBody.addEventListener("click", (event) => {
 });
 
 /* =============== ahmed end ============ */
-
-const CAPACITE_MAX_GROUPE = 15;
-const STATUTS_INSCRIPTION = ["En attente", "Validée", "Payée"];
 
 // -------------- add registration form ---------------
 const successMessage = document.getElementById("registration-success");
@@ -207,7 +182,7 @@ function effacerToutesLesErreurs() {
   successMessage.classList.add("hidden");
 }
 
-// Efface les erreurs au fur et à mesure que l'utilisateur corrige les champs
+// Efface les erreurs
 studentNameInput.addEventListener("input", function () {
   errorStudentName.textContent = "";
   errorStudentName.classList.add("hidden");
@@ -217,7 +192,6 @@ levelSelect.addEventListener("change", function () {
   errorLevel.textContent = "";
   errorLevel.classList.add("hidden");
   remplirCoursParNiveau(courseSelect, this.value);
-  // Efface aussi l'erreur du cours si le niveau change
   errorCourse.textContent = "";
   errorCourse.classList.add("hidden");
 });
@@ -242,7 +216,7 @@ statusSelect.addEventListener("change", function () {
   errorStatus.classList.add("hidden");
 });
 
-// Remplit un select de cours avec les cours du niveau choisi (4 par niveau).
+// Remplit un select de cours avec les cours du niveau choisi.
 function remplirCoursParNiveau(select, niveau) {
   select.innerHTML = '<option value="">Choisir un cours</option>';
 
@@ -295,7 +269,6 @@ form.addEventListener("submit", function (event) {
 
   let formulaireValide = true;
 
-  // Validation du nom de l'élève
   if (!nomEleve) {
     errorStudentName.textContent = "Le nom et prénom de l'élève est obligatoire.";
     errorStudentName.classList.remove("hidden");
@@ -377,7 +350,6 @@ form.addEventListener("submit", function (event) {
     return;
   }
 
-  // Contrôle de la capacité maximale du groupe
   const nombreDansGroupe = Data.filter(
     (registration) =>
       String(registration.student.level) === String(niveau) &&
@@ -499,7 +471,6 @@ function effacerErreursEdit() {
   editFormError.classList.add("hidden");
 }
 
-// 1. Afficher le popup de modification
 function afficherPopupModification(id) {
   Data = JSON.parse(localStorage.getItem(STORAGE_KEY));
 
@@ -522,8 +493,6 @@ function afficherPopupModification(id) {
 
   remplirCoursParNiveau(editCourseSelect, inscription.student.level);
 
-  // Ne présélectionne le cours que s'il existe encore dans le catalogue actuel :
-  // une ancienne inscription peut référencer un cours qui n'existe plus.
   const coursEnregistre = inscription.courses && inscription.courses[0];
   if (coursEnregistre) {
     const coursCatalogue = FixedData.find(
@@ -563,7 +532,6 @@ editOverlay.addEventListener("click", function (event) {
   }
 });
 
-// 3. Modifier l'inscription (soumission du formulaire d'édition)
 function modifierInscription(event) {
   event.preventDefault();
   effacerErreursEdit();
@@ -653,7 +621,6 @@ function modifierInscription(event) {
 
   if (!formulaireValide) return;
 
-  // Contrôle des doublons (exclut l'inscription en cours de modification)
   const inscriptionExiste = Data.some(
     (registration) =>
       Number(registration.id) !== id &&
@@ -668,8 +635,6 @@ function modifierInscription(event) {
     editFormError.classList.remove("hidden");
     return;
   }
-
-  // Contrôle de la capacité maximale (exclut l'inscription modifiée)
   const nombreDansGroupe = Data.filter(
     (registration) =>
       Number(registration.id) !== id &&
@@ -686,7 +651,6 @@ function modifierInscription(event) {
     return;
   }
 
-  // Mise à jour de l'inscription existante
   const index = Data.findIndex(
     (registration) => Number(registration.id) === id,
   );
@@ -729,14 +693,12 @@ function modifierInscription(event) {
 editForm.addEventListener("submit", modifierInscription);
 
 
-// Event delegation : clic sur "Modifier" dans le tableau
 tableBody.addEventListener("click", function (event) {
   const editButton = event.target.closest("[data-action='edit']");
   if (editButton) {
     afficherPopupModification(editButton.getAttribute("data-id"));
   }
 });
-
 
 const VUES = {
   "#/inscriptions": "vue-inscriptions",
@@ -789,6 +751,7 @@ const spanNombreInscrits = document.getElementById("Nombre_inscrits");
 const spanTotalMontant = document.getElementById("totale_manton");
 const spanAttente = document.getElementById("attente");
 const spanPayee = document.getElementById("payee");
+const courseFillRates = document.getElementById("course-fill-rates");
 
 function actualiserKPI() {
     totalInscriptions = Data.length;
@@ -799,9 +762,93 @@ function actualiserKPI() {
     totalPayee = Data.filter(inscription => inscription.status === "Payée").length;
 
     spanNombreInscrits.textContent = totalInscriptions;
-    spanTotalMontant.textContent = `${totalRecettes} DH`;
+    spanTotalMontant.textContent = totalRecettes;
     spanAttente.textContent = totalAttente;
     spanPayee.textContent = totalPayee;
+
+    if (courseFillRates) {
+        courseFillRates.innerHTML = FixedData.map((course) => {
+            const inscrits = Data.filter((inscription) =>
+                (inscription.courses || []).some((inscritCourse) => String(inscritCourse.id) === String(course.id)),
+            ).length;
+            const taux = Math.min(100, Math.round((inscrits / CAPACITE_MAX_GROUPE) * 100));
+            return `<article class="rounded-lg bg-slate-50 p-4">
+                <div class="mb-2 flex items-start justify-between gap-3">
+                    <div><h3 class="text-sm font-semibold text-gray-800">${course.subject}</h3><p class="text-xs text-gray-500">${course.level}</p></div>
+                    <span class="shrink-0 text-sm font-semibold text-blue-800">${inscrits} / ${CAPACITE_MAX_GROUPE}</span>
+                </div>
+                <div class="h-2.5 overflow-hidden rounded-full bg-blue-100" role="progressbar" aria-label="Remplissage ${course.subject}, ${course.level}" aria-valuemin="0" aria-valuemax="${CAPACITE_MAX_GROUPE}" aria-valuenow="${Math.min(inscrits, CAPACITE_MAX_GROUPE)}">
+                    <div class="h-full rounded-full bg-blue-600 transition-all" style="width: ${taux}%"></div>
+                </div>
+                <p class="mt-2 text-right text-xs text-gray-500">${taux}% de remplissage</p>
+            </article>`;
+        }).join("");
+    }
 }
 
-window.addEventListener("load", actualiserKPI);
+actualiserKPI();
+
+let statutDonneesModifiees = false;
+for (const inscription of Data) {
+  const inscriptionInitiale = RegistrationsData.find((seed) =>
+    String(seed.id) === String(inscription.id) &&
+    seed.student?.name === inscription.student?.name,
+  );
+  const statut = inscription.status || inscription.statut || inscriptionInitiale?.status;
+  const statutValide = STATUTS_INSCRIPTION.includes(statut);
+  if (statutValide) {
+    if (inscription.status !== statut) statutDonneesModifiees = true;
+    inscription.status = statut;
+  } else {
+    inscription.status = "En attente";
+    statutDonneesModifiees = true;
+  }
+  if ("statut" in inscription) statutDonneesModifiees = true;
+  delete inscription.statut;
+}
+if (statutDonneesModifiees) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(Data));
+}
+
+// -------------- migration des anciens niveaux --------------
+const nbNiveauxMigres = migrerNiveaux(Data);
+if (nbNiveauxMigres > 0) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(Data));
+}
+
+let nbDatesMigrees = 0;
+for (const inscription of Data) {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(inscription.dateInscription)) continue;
+  inscription.dateInscription =
+    inscription.date || new Date().toISOString().slice(0, 10);
+  nbDatesMigrees += 1;
+}
+if (nbDatesMigrees > 0) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(Data));
+}
+
+// Exporter toutes les inscriptions enregistrées.
+document.getElementById("export-csv").addEventListener("click", () => {
+  const inscriptions = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  const lignes = [
+    ["ID", "Élève", "Téléphone parent", "Parent", "Niveau", "Montant (MAD)", "Statut", "Date"],
+    ...inscriptions.map((inscription) => [
+      inscription.id,
+      inscription.student.name,
+      inscription.parent.phone,
+      inscription.parent.name,
+      inscription.student.level,
+      inscription.totalMADPerMonth,
+      inscription.status,
+      inscription.dateInscription,
+    ]),
+  ];
+  const csv = "\uFEFF" + lignes.map((ligne) =>
+    ligne.map((cellule) => `"${String(cellule ?? "").replaceAll('"', '""')}"`).join(";"),
+  ).join("\r\n");
+  const lien = document.createElement("a");
+  lien.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+  lien.download = "inscriptions.csv";
+  lien.click();
+  URL.revokeObjectURL(lien.href);
+});

@@ -11,414 +11,440 @@
         crossorigin="anonymous" referrerpolicy="no-referrer">
 </head>
 
-<body class="flex justify-around p-3.5 ">
+<body class="min-h-screen bg-slate-50 p-3 sm:p-5 lg:p-6">
     <header></header>
-     <aside id="side" class="bg-blue-400 p-6 w-[300px] rounded-2xl">
-        <h2 class="font-semibold text-2xl mb-3 text-amber-50">Nour <span class="text-amber-400">Academy</span></h2>
-        <nav aria-label="Navigation principale" class="flex flex-col gap-1.5">
-            <button type="button" data-route="#/inscriptions"
-                class="btns bg-amber-50 p-3 rounded-2xl font-semibold w-full hover:bg-amber-200 transition-colors text-blue-500">
-                <a href="#/inscriptions" class="block">Inscriptions</a>
-            </button>
-            <button type="button" data-route="#/tableau-de-bord"
-                class="btns bg-amber-50 p-3 rounded-2xl font-semibold w-full hover:bg-amber-200 transition-colors text-blue-500">
-                <a href="#/tableau-de-bord" class="block">Tableau de bord</a>
-            </button>
-        </nav>
-    </aside>
-    <main>
-        
-        <section id="vue-inscriptions" class="mx-auto max-w-6xl p-4">
-            <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
-                <h3 class="text-xl font-bold text-3xl  text-blue-800">Inscriptions</h3>
-                <div class="flex items-center gap-3">
-                    <span id="total-inscriptions"
-                        class="rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-900"></span>
-                    <button id="open-registration-form" type="button" aria-controls="registration-form-container"
-                        aria-expanded="false" aria-haspopup="dialog"
-                        class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 hover:cursor-pointer">
-                        <i class="fa-solid fa-plus mr-2" aria-hidden="true"></i>Ajouter une inscription
-                    </button>
-                </div>
-            </div>
-
-            <div id="registration-success"
-                class="mb-4 hidden rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700"
-                role="status" aria-live="polite"></div>
-
-            <div id="registration-form-overlay" class="fixed inset-0 z-40 hidden bg-gray-900/50"></div>
-
-
-            <!-- Filters -->
-            <div class="mb-3 flex flex-wrap items-end gap-4">
-                <div class="flex min-w-48 flex-1 flex-col gap-1">
-                    <label for="search" class="text-sm font-semibold text-gray-800">Recherche</label>
-                    <input id="search" type="search" placeholder="Nom ou téléphone"
-                        class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-900 focus:outline-none" />
-                </div>
-
-                <div class="flex flex-col gap-1">
-                    <label for="status" class="text-sm font-semibold text-gray-800">Statut</label>
-                    <select id="status"
-                        class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-900 focus:outline-none">
-                        <option value="">Tous</option>
-                        <option value="En attente">En attente</option>
-                        <option value="Validée">Validée</option>
-                        <option value="Payée">Payée</option>
-                    </select>
-                </div>
-
-                <div class="flex flex-col gap-1">
-                    <label for="sort" class="text-sm font-semibold text-gray-800">Trier par</label>
-                    <select id="sort"
-                        class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-900 focus:outline-none">
-                        <option value="id-asc">ID (croissant)</option>
-                        <option value="date-desc">Plus récent d'abord</option>
-                        <option value="date-asc">Plus ancien d'abord</option>
-                        <option value="name-asc">Nom (A → Z)</option>
-                        <option value="name-desc">Nom (Z → A)</option>
-                    </select>
-                </div>
-
-                <button type="button"
-                    class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-blue-900 hover:bg-gray-50">
-                    Exporter CSV
+    <div
+        class="mx-auto flex min-h-[calc(100vh-3rem)] w-full max-w-[1600px] flex-col gap-4 lg:min-h-[calc(100vh-3rem)] lg:flex-row lg:gap-6">
+        <aside id="side"
+            class="shrink-0 rounded-2xl bg-blue-600 p-4 shadow-sm sm:p-5 lg:sticky lg:top-6 lg:h-[calc(100vh-3rem)] lg:w-64 lg:p-6">
+            <h2 class="mb-3 text-xl font-semibold text-amber-50 sm:text-2xl">Nour <span
+                    class="text-amber-300">Academy</span></h2>
+            <nav aria-label="Navigation principale" class="flex gap-2 lg:flex-col">
+                <button type="button" data-route="#/inscriptions"
+                    class="btns flex-1 rounded-xl bg-amber-50 p-3 text-sm font-semibold text-blue-700 transition-colors hover:bg-amber-200 lg:w-full lg:flex-none lg:text-left">
+                    <a href="#/inscriptions" class="block">Inscriptions</a>
                 </button>
-            </div>
+                <button type="button" data-route="#/tableau-de-bord"
+                    class="btns flex-1 rounded-xl bg-amber-50 p-3 text-sm font-semibold text-blue-700 transition-colors hover:bg-amber-200 lg:w-full lg:flex-none lg:text-left">
+                    <a href="#/tableau-de-bord" class="block">Tableau de bord</a>
+                </button>
+            </nav>
+        </aside>
+        <main class="min-w-0 flex-1">
 
-            <section id="registration-form-container"
-                class="fixed left-1/2 top-1/2 z-50 hidden max-h-[90vh] w-[calc(100%-2rem)] max-w-3xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-xl border border-gray-300 bg-white p-4 shadow-xl md:p-6"
-                role="dialog" aria-modal="true" aria-labelledby="registration-form-title">
-                <div class="mb-4 flex items-start justify-between gap-3">
-                    <h4 id="registration-form-title" class="text-lg font-semibold text-gray-800">Nouvelle inscription
-                    </h4>
-                    <button id="close-registration-form" type="button" aria-label="Fermer le formulaire"
-                        class="-mt-1 rounded-lg p-1 text-3xl leading-none text-gray-500 transition hover:bg-gray-100 hover:text-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 hover:cursor-pointer">
-                        &times;
-                    </button>
-                </div>
-
-                <form id="registration-form" class="grid gap-4 md:grid-cols-2" novalidate>
-                    <div class="flex flex-col gap-1">
-                        <label for="registration-id" class="text-sm font-medium text-gray-700">Numéro de dossier</label>
-                        <input id="registration-id" type="text" readonly
-                            class="rounded-lg border border-gray-300 bg-gray-100 px-3 py-2 text-sm text-gray-600" />
-                        <p class="text-xs text-gray-500">Généré automatiquement.</p>
-                    </div>
-
-                    <div class="flex flex-col gap-1">
-                        <label for="registration-student-name" class="text-sm font-medium text-gray-700">
-                            Nom et prénom de l'élève <span class="text-red-600">*</span>
-                        </label>
-                        <input id="registration-student-name" type="text" required minlength="2" maxlength="60"
-                            autocomplete="off"
-                            class="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 focus:border-blue-500 focus:outline-none" />
-                        <span id="error-student-name" class="text-xs text-red-600 hidden" role="alert"></span>
-                    </div>
-
-                    <div class="flex flex-col gap-1">
-                        <label for="registration-level" class="text-sm font-medium text-gray-700">
-                            Niveau <span class="text-red-600">*</span>
-                        </label>
-                        <select id="registration-level" required
-                            class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 focus:border-blue-500 focus:outline-none">
-                            <option value="">Choisir un niveau</option>
-                            <option value="Collège">Collège</option>
-                            <option value="1BAC">1BAC</option>
-                            <option value="2BAC">2BAC</option>
-                        </select>
-                        <span id="error-level" class="text-xs text-red-600 hidden" role="alert"></span>
-                    </div>
-
-                    <div class="flex flex-col gap-1">
-                        <label for="registration-course" class="text-sm font-medium text-gray-700">
-                            Cours <span class="text-red-600">*</span>
-                        </label>
-                        <select id="registration-course" required
-                            class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 focus:border-blue-500 focus:outline-none">
-                            <option value="">Choisir un cours</option>
-                        </select>
-                        <span id="error-course" class="text-xs text-red-600 hidden" role="alert"></span>
-                        <p class="text-xs text-gray-500">Capacité maximale : 15 élèves par groupe.</p>
-                    </div>
-
-                    <div class="flex flex-col gap-1">
-                        <label for="registration-parent-name" class="text-sm font-medium text-gray-700">
-                            Nom et prénom du parent <span class="text-red-600">*</span>
-                        </label>
-                        <input id="registration-parent-name" type="text" required minlength="2" maxlength="60"
-                            autocomplete="off"
-                            class="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 focus:border-blue-500 focus:outline-none" />
-                        <span id="error-parent-name" class="text-xs text-red-600 hidden" role="alert"></span>
-                    </div>
-
-                    <div class="flex flex-col gap-1">
-                        <label for="registration-parent-phone" class="text-sm font-medium text-gray-700">
-                            Téléphone du parent <span class="text-red-600">*</span>
-                        </label>
-                        <input id="registration-parent-phone" type="tel" required minlength="10" maxlength="13"
-                            inputmode="tel" autocomplete="tel" placeholder="06XXXXXXXX ou +2126XXXXXXXX"
-                            class="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 focus:border-blue-500 focus:outline-none" />
-                        <span id="error-phone" class="text-xs text-red-600 hidden" role="alert"></span>
-                    </div>
-
-                    <div class="flex flex-col gap-1">
-                        <label for="registration-status" class="text-sm font-medium text-gray-700">
-                            Statut <span class="text-red-600">*</span>
-                        </label>
-                        <select id="registration-status" required
-                            class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 focus:border-blue-500 focus:outline-none">
-                            <option value="En attente" selected>En attente</option>
-                            <option value="Validée">Validée</option>
-                            <option value="Payée">Payée</option>
-                        </select>
-                        <span id="error-status" class="text-xs text-red-600 hidden" role="alert"></span>
-                    </div>
-
-
-
-                    <p id="registration-form-error" role="alert"
-                        class="hidden rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 md:col-span-2"></p>
-
-                    <div class="flex flex-wrap gap-3 md:col-span-2">
-                        <button type="submit"
+            <section id="vue-inscriptions" class="mx-auto w-full max-w-none p-2 sm:p-4">
+                <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+                    <h3 class="text-xl font-bold text-3xl  text-blue-800">Inscriptions</h3>
+                    <div class="flex items-center gap-3">
+                        <span id="total-inscriptions"
+                            class="rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-900"></span>
+                        <button id="open-registration-form" type="button" aria-controls="registration-form-container"
+                            aria-expanded="false" aria-haspopup="dialog"
                             class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 hover:cursor-pointer">
-                            Ajouter l'inscription
-                        </button>
-                        <button id="cancel-registration-form" type="button"
-                            class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 hover:cursor-pointer">
-                            Annuler
+                            <i class="fa-solid fa-plus mr-2" aria-hidden="true"></i>Ajouter une inscription
                         </button>
                     </div>
-                </form>
-            </section>
-
-            <!--  pop up MODIFICATION  -->
-            <div id="edit-registration-overlay" class="fixed inset-0 z-40 hidden bg-gray-900/50"></div>
-
-            <section id="edit-registration-container"
-                class="fixed left-1/2 top-1/2 z-50 hidden max-h-[90vh] w-[calc(100%-2rem)] max-w-3xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-xl border border-gray-300 bg-white p-4 shadow-xl md:p-6"
-                role="dialog" aria-modal="true" aria-labelledby="edit-registration-title">
-                <div class="mb-4 flex items-start justify-between gap-3">
-                    <h4 id="edit-registration-title" class="text-lg font-semibold text-gray-800">Modifier l'inscription
-                    </h4>
-                    <button id="close-edit-registration" type="button" aria-label="Fermer le formulaire de modification"
-                        class="-mt-1 rounded-lg p-1 text-3xl leading-none text-gray-500 transition hover:bg-gray-100 hover:text-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 hover:cursor-pointer">
-                        &times;
-                    </button>
                 </div>
 
-                <form id="edit-registration-form" class="grid gap-4 md:grid-cols-2" novalidate>
-                    <div class="flex flex-col gap-1">
-                        <label for="edit-registration-id" class="text-sm font-medium text-gray-700">Numéro de
-                            dossier</label>
-                        <input id="edit-registration-id" type="text" readonly
-                            class="rounded-lg border border-gray-300 bg-gray-100 px-3 py-2 text-sm text-gray-600" />
-                        <p class="text-xs text-gray-500">Généré automatiquement.</p>
+                <div id="registration-success"
+                    class="mb-4 hidden rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700"
+                    role="status" aria-live="polite"></div>
+
+                <div id="registration-form-overlay" class="fixed inset-0 z-40 hidden bg-gray-900/50"></div>
+
+
+                <div class="mb-3 flex flex-wrap items-end gap-4">
+                    <div class="flex min-w-48 flex-1 flex-col gap-1">
+                        <label for="search" class="text-sm font-semibold text-gray-800">Recherche</label>
+                        <input id="search" type="search" placeholder="Nom ou téléphone"
+                            class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-900 focus:outline-none" />
                     </div>
 
                     <div class="flex flex-col gap-1">
-                        <label for="edit-student-name" class="text-sm font-medium text-gray-700">
-                            Nom et prénom de l'élève <span class="text-red-600">*</span>
-                        </label>
-                        <input id="edit-student-name" type="text" required minlength="2" maxlength="60"
-                            autocomplete="off"
-                            class="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 focus:border-blue-500 focus:outline-none" />
-                        <span id="edit-error-student-name" class="text-xs text-red-600 hidden" role="alert"></span>
-                    </div>
-
-                    <div class="flex flex-col gap-1">
-                        <label for="edit-level" class="text-sm font-medium text-gray-700">
-                            Niveau <span class="text-red-600">*</span>
-                        </label>
-                        <select id="edit-level" required
-                            class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 focus:border-blue-500 focus:outline-none">
-                            <option value="">Choisir un niveau</option>
-                            <option value="Collège">Collège</option>
-                            <option value="1BAC">1BAC</option>
-                            <option value="2BAC">2BAC</option>
-                        </select>
-                        <span id="edit-error-level" class="text-xs text-red-600 hidden" role="alert"></span>
-                    </div>
-
-                    <div class="flex flex-col gap-1">
-                        <label for="edit-course" class="text-sm font-medium text-gray-700">
-                            Cours / Matière <span class="text-red-600">*</span>
-                        </label>
-                        <select id="edit-course" required
-                            class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 focus:border-blue-500 focus:outline-none">
-                            <option value="">Choisir un cours</option>
-                        </select>
-                        <span id="edit-error-course" class="text-xs text-red-600 hidden" role="alert"></span>
-                        <p class="text-xs text-gray-500">Capacité maximale : 15 élèves par groupe.</p>
-                    </div>
-
-                    <div class="flex flex-col gap-1">
-                        <label for="edit-parent-name" class="text-sm font-medium text-gray-700">
-                            Nom et prénom du parent <span class="text-red-600">*</span>
-                        </label>
-                        <input id="edit-parent-name" type="text" required minlength="2" maxlength="60"
-                            autocomplete="off"
-                            class="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 focus:border-blue-500 focus:outline-none" />
-                        <span id="edit-error-parent-name" class="text-xs text-red-600 hidden" role="alert"></span>
-                    </div>
-
-                    <div class="flex flex-col gap-1">
-                        <label for="edit-parent-phone" class="text-sm font-medium text-gray-700">
-                            Téléphone du parent <span class="text-red-600">*</span>
-                        </label>
-                        <input id="edit-parent-phone" type="tel" required minlength="10" maxlength="13" inputmode="tel"
-                            autocomplete="tel" placeholder="06XXXXXXXX ou +2126XXXXXXXX"
-                            class="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 focus:border-blue-500 focus:outline-none" />
-                        <span id="edit-error-phone" class="text-xs text-red-600 hidden" role="alert"></span>
-                    </div>
-
-                    <div class="flex flex-col gap-1">
-                        <label for="edit-status" class="text-sm font-medium text-gray-700">
-                            Statut <span class="text-red-600">*</span>
-                        </label>
-                        <select id="edit-status" required
-                            class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 focus:border-blue-500 focus:outline-none">
+                        <label for="status" class="text-sm font-semibold text-gray-800">Statut</label>
+                        <select id="status"
+                            class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-900 focus:outline-none">
+                            <option value="">Tous</option>
                             <option value="En attente">En attente</option>
                             <option value="Validée">Validée</option>
                             <option value="Payée">Payée</option>
                         </select>
-                        <span id="edit-error-status" class="text-xs text-red-600 hidden" role="alert"></span>
                     </div>
 
-                    <p id="edit-form-error" role="alert"
-                        class="hidden rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 md:col-span-2"></p>
+                    <div class="flex flex-col gap-1">
+                        <label for="sort" class="text-sm font-semibold text-gray-800">Trier par</label>
+                        <select id="sort"
+                            class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-900 focus:outline-none">
+                            <option value="id-asc">ID (croissant)</option>
+                            <option value="date-desc">Plus récent d'abord</option>
+                            <option value="date-asc">Plus ancien d'abord</option>
+                            <option value="name-asc">Nom (A → Z)</option>
+                            <option value="name-desc">Nom (Z → A)</option>
+                        </select>
+                    </div>
 
-                    <div class="flex flex-wrap gap-3 md:col-span-2">
-                        <button type="submit"
-                            class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 hover:cursor-pointer">
-                            Enregistrer les modifications
-                        </button>
-                        <button id="cancel-edit-registration" type="button"
-                            class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 hover:cursor-pointer">
-                            Annuler
+                    <button id="export-csv" type="button"
+                        class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-blue-900 hover:bg-gray-50">
+                        Exporter CSV
+                    </button>
+                </div>
+
+                <section id="registration-form-container"
+                    class="fixed left-1/2 top-1/2 z-50 hidden max-h-[90vh] w-[calc(100%-2rem)] max-w-3xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-xl border border-gray-300 bg-white p-4 shadow-xl md:p-6"
+                    role="dialog" aria-modal="true" aria-labelledby="registration-form-title">
+                    <div class="mb-4 flex items-start justify-between gap-3">
+                        <h4 id="registration-form-title" class="text-lg font-semibold text-gray-800">Nouvelle
+                            inscription
+                        </h4>
+                        <button id="close-registration-form" type="button" aria-label="Fermer le formulaire"
+                            class="-mt-1 rounded-lg p-1 text-3xl leading-none text-gray-500 transition hover:bg-gray-100 hover:text-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 hover:cursor-pointer">
+                            &times;
                         </button>
                     </div>
-                </form>
+
+                    <form id="registration-form" class="grid gap-4 md:grid-cols-2" novalidate>
+                        <div class="flex flex-col gap-1">
+                            <label for="registration-id" class="text-sm font-medium text-gray-700">Numéro de
+                                dossier</label>
+                            <input id="registration-id" type="text" readonly
+                                class="rounded-lg border border-gray-300 bg-gray-100 px-3 py-2 text-sm text-gray-600" />
+                            <p class="text-xs text-gray-500">Généré automatiquement.</p>
+                        </div>
+
+                        <div class="flex flex-col gap-1">
+                            <label for="registration-student-name" class="text-sm font-medium text-gray-700">
+                                Nom et prénom de l'élève <span class="text-red-600">*</span>
+                            </label>
+                            <input id="registration-student-name" type="text" required minlength="2" maxlength="60"
+                                autocomplete="off"
+                                class="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 focus:border-blue-500 focus:outline-none" />
+                            <span id="error-student-name" class="text-xs text-red-600 hidden" role="alert"></span>
+                        </div>
+
+                        <div class="flex flex-col gap-1">
+                            <label for="registration-level" class="text-sm font-medium text-gray-700">
+                                Niveau <span class="text-red-600">*</span>
+                            </label>
+                            <select id="registration-level" required
+                                class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 focus:border-blue-500 focus:outline-none">
+                                <option value="">Choisir un niveau</option>
+                                <option value="Collège">Collège</option>
+                                <option value="1BAC">1BAC</option>
+                                <option value="2BAC">2BAC</option>
+                            </select>
+                            <span id="error-level" class="text-xs text-red-600 hidden" role="alert"></span>
+                        </div>
+
+                        <div class="flex flex-col gap-1">
+                            <label for="registration-course" class="text-sm font-medium text-gray-700">
+                                Cours <span class="text-red-600">*</span>
+                            </label>
+                            <select id="registration-course" required
+                                class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 focus:border-blue-500 focus:outline-none">
+                                <option value="">Choisir un cours</option>
+                            </select>
+                            <span id="error-course" class="text-xs text-red-600 hidden" role="alert"></span>
+                            <p class="text-xs text-gray-500">Capacité maximale : 15 élèves par groupe.</p>
+                        </div>
+
+                        <div class="flex flex-col gap-1">
+                            <label for="registration-parent-name" class="text-sm font-medium text-gray-700">
+                                Nom et prénom du parent <span class="text-red-600">*</span>
+                            </label>
+                            <input id="registration-parent-name" type="text" required minlength="2" maxlength="60"
+                                autocomplete="off"
+                                class="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 focus:border-blue-500 focus:outline-none" />
+                            <span id="error-parent-name" class="text-xs text-red-600 hidden" role="alert"></span>
+                        </div>
+
+                        <div class="flex flex-col gap-1">
+                            <label for="registration-parent-phone" class="text-sm font-medium text-gray-700">
+                                Téléphone du parent <span class="text-red-600">*</span>
+                            </label>
+                            <input id="registration-parent-phone" type="tel" required minlength="10" maxlength="13"
+                                inputmode="tel" autocomplete="tel" placeholder="06XXXXXXXX ou +2126XXXXXXXX"
+                                class="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 focus:border-blue-500 focus:outline-none" />
+                            <span id="error-phone" class="text-xs text-red-600 hidden" role="alert"></span>
+                        </div>
+
+                        <div class="flex flex-col gap-1">
+                            <label for="registration-status" class="text-sm font-medium text-gray-700">
+                                Statut <span class="text-red-600">*</span>
+                            </label>
+                            <select id="registration-status" required
+                                class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 focus:border-blue-500 focus:outline-none">
+                                <option value="En attente" selected>En attente</option>
+                                <option value="Validée">Validée</option>
+                                <option value="Payée">Payée</option>
+                            </select>
+                            <span id="error-status" class="text-xs text-red-600 hidden" role="alert"></span>
+                        </div>
+
+
+
+                        <p id="registration-form-error" role="alert"
+                            class="hidden rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 md:col-span-2"></p>
+
+                        <div class="flex flex-wrap gap-3 md:col-span-2">
+                            <button type="submit"
+                                class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 hover:cursor-pointer">
+                                Ajouter l'inscription
+                            </button>
+                            <button id="cancel-registration-form" type="button"
+                                class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 hover:cursor-pointer">
+                                Annuler
+                            </button>
+                        </div>
+                    </form>
+                </section>
+
+                <div id="edit-registration-overlay" class="fixed inset-0 z-40 hidden bg-gray-900/50"></div>
+
+                <section id="edit-registration-container"
+                    class="fixed left-1/2 top-1/2 z-50 hidden max-h-[90vh] w-[calc(100%-2rem)] max-w-3xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-xl border border-gray-300 bg-white p-4 shadow-xl md:p-6"
+                    role="dialog" aria-modal="true" aria-labelledby="edit-registration-title">
+                    <div class="mb-4 flex items-start justify-between gap-3">
+                        <h4 id="edit-registration-title" class="text-lg font-semibold text-gray-800">Modifier
+                            l'inscription
+                        </h4>
+                        <button id="close-edit-registration" type="button"
+                            aria-label="Fermer le formulaire de modification"
+                            class="-mt-1 rounded-lg p-1 text-3xl leading-none text-gray-500 transition hover:bg-gray-100 hover:text-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 hover:cursor-pointer">
+                            &times;
+                        </button>
+                    </div>
+
+                    <form id="edit-registration-form" class="grid gap-4 md:grid-cols-2" novalidate>
+                        <div class="flex flex-col gap-1">
+                            <label for="edit-registration-id" class="text-sm font-medium text-gray-700">Numéro de
+                                dossier</label>
+                            <input id="edit-registration-id" type="text" readonly
+                                class="rounded-lg border border-gray-300 bg-gray-100 px-3 py-2 text-sm text-gray-600" />
+                            <p class="text-xs text-gray-500">Généré automatiquement.</p>
+                        </div>
+
+                        <div class="flex flex-col gap-1">
+                            <label for="edit-student-name" class="text-sm font-medium text-gray-700">
+                                Nom et prénom de l'élève <span class="text-red-600">*</span>
+                            </label>
+                            <input id="edit-student-name" type="text" required minlength="2" maxlength="60"
+                                autocomplete="off"
+                                class="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 focus:border-blue-500 focus:outline-none" />
+                            <span id="edit-error-student-name" class="text-xs text-red-600 hidden" role="alert"></span>
+                        </div>
+
+                        <div class="flex flex-col gap-1">
+                            <label for="edit-level" class="text-sm font-medium text-gray-700">
+                                Niveau <span class="text-red-600">*</span>
+                            </label>
+                            <select id="edit-level" required
+                                class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 focus:border-blue-500 focus:outline-none">
+                                <option value="">Choisir un niveau</option>
+                                <option value="Collège">Collège</option>
+                                <option value="1BAC">1BAC</option>
+                                <option value="2BAC">2BAC</option>
+                            </select>
+                            <span id="edit-error-level" class="text-xs text-red-600 hidden" role="alert"></span>
+                        </div>
+
+                        <div class="flex flex-col gap-1">
+                            <label for="edit-course" class="text-sm font-medium text-gray-700">
+                                Cours / Matière <span class="text-red-600">*</span>
+                            </label>
+                            <select id="edit-course" required
+                                class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 focus:border-blue-500 focus:outline-none">
+                                <option value="">Choisir un cours</option>
+                            </select>
+                            <span id="edit-error-course" class="text-xs text-red-600 hidden" role="alert"></span>
+                            <p class="text-xs text-gray-500">Capacité maximale : 15 élèves par groupe.</p>
+                        </div>
+
+                        <div class="flex flex-col gap-1">
+                            <label for="edit-parent-name" class="text-sm font-medium text-gray-700">
+                                Nom et prénom du parent <span class="text-red-600">*</span>
+                            </label>
+                            <input id="edit-parent-name" type="text" required minlength="2" maxlength="60"
+                                autocomplete="off"
+                                class="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 focus:border-blue-500 focus:outline-none" />
+                            <span id="edit-error-parent-name" class="text-xs text-red-600 hidden" role="alert"></span>
+                        </div>
+
+                        <div class="flex flex-col gap-1">
+                            <label for="edit-parent-phone" class="text-sm font-medium text-gray-700">
+                                Téléphone du parent <span class="text-red-600">*</span>
+                            </label>
+                            <input id="edit-parent-phone" type="tel" required minlength="10" maxlength="13"
+                                inputmode="tel" autocomplete="tel" placeholder="06XXXXXXXX ou +2126XXXXXXXX"
+                                class="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 focus:border-blue-500 focus:outline-none" />
+                            <span id="edit-error-phone" class="text-xs text-red-600 hidden" role="alert"></span>
+                        </div>
+
+                        <div class="flex flex-col gap-1">
+                            <label for="edit-status" class="text-sm font-medium text-gray-700">
+                                Statut <span class="text-red-600">*</span>
+                            </label>
+                            <select id="edit-status" required
+                                class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 focus:border-blue-500 focus:outline-none">
+                                <option value="En attente">En attente</option>
+                                <option value="Validée">Validée</option>
+                                <option value="Payée">Payée</option>
+                            </select>
+                            <span id="edit-error-status" class="text-xs text-red-600 hidden" role="alert"></span>
+                        </div>
+
+                        <p id="edit-form-error" role="alert"
+                            class="hidden rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 md:col-span-2"></p>
+
+                        <div class="flex flex-wrap gap-3 md:col-span-2">
+                            <button type="submit"
+                                class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 hover:cursor-pointer">
+                                Enregistrer les modifications
+                            </button>
+                            <button id="cancel-edit-registration" type="button"
+                                class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 hover:cursor-pointer">
+                                Annuler
+                            </button>
+                        </div>
+                    </form>
+                </section>
+
+                <div class="overflow-x-auto rounded-xl border border-gray-300 bg-white shadow-sm">
+                    <table id="table" class="w-full text-left text-sm">
+                        <caption class="sr-only">Liste des inscriptions</caption>
+
+                        <thead
+                            class="border-b border-gray-300 bg-gray-100 text-xs uppercase tracking-wide text-gray-600">
+                            <tr class="divide-x divide-gray-300">
+                                <th scope="col" class="px-4 py-3 text-left font-semibold">ID</th>
+                                <th scope="col" class="px-4 py-3 text-left font-semibold">Élève</th>
+                                <th scope="col" class="px-4 py-3 text-left font-semibold">Téléphone</th>
+                                <th scope="col" class="px-4 py-3 text-left font-semibold">Parent</th>
+                                <th scope="col" class="px-4 py-3 text-left font-semibold">Niveau</th>
+                                <th scope="col" class="px-4 py-3 text-left font-semibold">Total / mois</th>
+                                <th scope="col" class="px-4 py-3 text-left font-semibold">Statut</th>
+                                <th scope="col" class="px-4 py-3 text-left font-semibold">Date</th>
+                                <th scope="col" class="px-4 py-3 text-center font-semibold">Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="table-body" class="divide-y divide-gray-300 text-gray-700">
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-3 flex flex-wrap items-center justify-between gap-3">
+                    <button id="page-precedent" type="button"
+                        class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-blue-900 shadow-sm transition-all duration-200 ease-out hover:cursor-pointer hover:border-blue-900 hover:bg-blue-900 hover:text-white hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 active:scale-[0.98] active:border-blue-800 active:bg-blue-800 active:text-white active:shadow-sm disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-400 disabled:opacity-70 disabled:shadow-none disabled:scale-100 disabled:hover:border-gray-200 disabled:hover:bg-gray-50 disabled:hover:text-gray-400 disabled:hover:shadow-none">
+                        Précédent
+                    </button>
+                    <p id="page-info" class="text-sm tabular-nums text-gray-600">Page 1 sur 1</p>
+                    <button id="page-suivant" type="button"
+                        class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-blue-900 shadow-sm transition-all duration-200 ease-out hover:cursor-pointer hover:border-blue-900 hover:bg-blue-900 hover:text-white hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 active:scale-[0.98] active:border-blue-800 active:bg-blue-800 active:text-white active:shadow-sm disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-400 disabled:opacity-70 disabled:shadow-none disabled:scale-100 disabled:hover:border-gray-200 disabled:hover:bg-gray-50 disabled:hover:text-gray-400 disabled:hover:shadow-none">
+                        Suivant
+                    </button>
+                </div>
             </section>
 
-            <div class="overflow-x-auto rounded-xl border border-gray-300 bg-white shadow-sm">
-                <table id="table" class="w-full text-left text-sm">
-                    <caption class="sr-only">Liste des inscriptions</caption>
+            <section id="vue-tableau-de-bord"
+                class="mx-auto hidden min-h-[calc(100vh-10rem)] w-full max-w-none p-2 sm:p-4 lg:min-h-[calc(100vh-3rem)]">
+                <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+                    <h3 class="text-xl font-bold text-3xl text-blue-800">Tableau de bord</h3>
+                </div>
 
-                    <thead class="border-b border-gray-300 bg-gray-100 text-xs uppercase tracking-wide text-gray-600">
-                        <tr class="divide-x divide-gray-300">
-                            <th scope="col" class="px-4 py-3 text-left font-semibold">ID</th>
-                            <th scope="col" class="px-4 py-3 text-left font-semibold">Élève</th>
-                            <th scope="col" class="px-4 py-3 text-left font-semibold">Téléphone</th>
-                            <th scope="col" class="px-4 py-3 text-left font-semibold">Parent</th>
-                            <th scope="col" class="px-4 py-3 text-left font-semibold">Niveau</th>
-                            <th scope="col" class="px-4 py-3 text-left font-semibold">Total / mois</th>
-                            <th scope="col" class="px-4 py-3 text-left font-semibold">Statut</th>
-                            <th scope="col" class="px-4 py-3 text-left font-semibold">Date</th>
-                            <th scope="col" class="px-4 py-3 text-center font-semibold">Actions</th>
-                        </tr>
-                    </thead>
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
 
-                    <tbody id="table-body" class="divide-y divide-gray-300 text-gray-700">
-                        <!-- rows are generated by JS -->
-                    </tbody>
-                </table>
-            </div>
+                    <div class="rounded-xl border border-blue-100 bg-white p-5 shadow-sm transition hover:shadow-md">
+                        <div class="mb-4 flex items-center justify-between">
+                            <h2 class="text-sm font-medium text-gray-600">
+                                Nombre total d'inscrits
+                            </h2>
+                            <span
+                                class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                                <i class="fa-solid fa-users text-lg" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                        <p id="Nombre_inscrits" class="text-3xl font-bold text-blue-900">0</p>
+                        <p class="mt-2 text-xs text-gray-500">
+                            <i class="fa-solid fa-arrows-rotate mr-1" aria-hidden="true"></i>
+                            Mis à jour automatiquement
+                        </p>
+                    </div>
 
-            <div class="mt-3 flex flex-wrap items-center justify-between gap-3">
-                <button id="page-precedent" type="button"
-                    class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-blue-900 shadow-sm transition-all duration-200 ease-out hover:cursor-pointer hover:border-blue-900 hover:bg-blue-900 hover:text-white hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 active:scale-[0.98] active:border-blue-800 active:bg-blue-800 active:text-white active:shadow-sm disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-400 disabled:opacity-70 disabled:shadow-none disabled:scale-100 disabled:hover:border-gray-200 disabled:hover:bg-gray-50 disabled:hover:text-gray-400 disabled:hover:shadow-none">
-                    Précédent
-                </button>
-                <p id="page-info" class="text-sm tabular-nums text-gray-600">Page 1 sur 1</p>
-                <button id="page-suivant" type="button"
-                    class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-blue-900 shadow-sm transition-all duration-200 ease-out hover:cursor-pointer hover:border-blue-900 hover:bg-blue-900 hover:text-white hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 active:scale-[0.98] active:border-blue-800 active:bg-blue-800 active:text-white active:shadow-sm disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-400 disabled:opacity-70 disabled:shadow-none disabled:scale-100 disabled:hover:border-gray-200 disabled:hover:bg-gray-50 disabled:hover:text-gray-400 disabled:hover:shadow-none">
-                    Suivant
-                </button>
-            </div>
-        </section>
+                    <div class="rounded-xl border border-green-100 bg-white p-5 shadow-sm transition hover:shadow-md">
+                        <div class="mb-4 flex items-center justify-between">
+                            <h2 class="text-sm font-medium text-gray-600">
+                                Recettes encaissées
+                            </h2>
+                            <span
+                                class="flex h-10 w-10 items-center justify-center rounded-lg bg-green-50 text-green-600">
+                                <i class="fa-solid fa-wallet text-lg" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                        <p class="text-3xl font-bold text-green-700">
+                            <span id="totale_manton">0</span>
+                            <span class="text-base font-semibold">DH</span>
+                        </p>
+                        <p class="mt-2 text-xs text-gray-500">
+                            <i class="fa-solid fa-circle-check mr-1" aria-hidden="true"></i>
+                            Inscriptions payées uniquement
+                        </p>
+                    </div>
 
-        <!-- Vue « Tableau de bord » : même zone principale, affichée via #/tableau-de-bord -->
-        <section id="vue-tableau-de-bord" class="mx-auto hidden max-w-6xl p-4">
-            <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
-                <h3 class="text-xl font-bold text-3xl text-blue-800">Tableau de bord</h3>
-            </div>
+                    <div class="rounded-xl border border-amber-100 bg-white p-5 shadow-sm transition hover:shadow-md">
+                        <div class="mb-4 flex items-center justify-between">
+                            <h2 class="text-sm font-medium text-gray-600">
+                                Inscriptions en attente
+                            </h2>
+                            <span
+                                class="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
+                                <i class="fa-solid fa-clock text-lg" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                        <p id="attente" class="text-3xl font-bold text-amber-600">0</p>
+                        <p class="mt-2 text-xs text-gray-500">
+                            <i class="fa-solid fa-hourglass-half mr-1" aria-hidden="true"></i>
+                            Statut : En attente
+                        </p>
+                    </div>
 
-<main class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                    <div class="rounded-xl border border-emerald-100 bg-white p-5 shadow-sm transition hover:shadow-md">
+                        <div class="mb-4 flex items-center justify-between">
+                            <h2 class="text-sm font-medium text-gray-600">
+                                Inscriptions payées
+                            </h2>
+                            <span
+                                class="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
+                                <i class="fa-solid fa-check-double text-lg" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                        <p id="payee" class="text-3xl font-bold text-emerald-700">0</p>
+                        <p class="mt-2 text-xs text-gray-500">
+                            <i class="fa-solid fa-check"></i>
+                            Statut : Payée
+                        </p>
+                    </div>
 
-    <div class="rounded-xl border border-blue-100 bg-white p-5 shadow-sm transition hover:shadow-md">
-        <div class="mb-4 flex items-center justify-between">
-            <h2 class="text-sm font-medium text-gray-600">
-                Nombre total d'inscrits
-            </h2>
-            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
-                <i class="fa-solid fa-users text-lg" aria-hidden="true"></i>
-            </span>
-        </div>
-        <p id="Nombre_inscrits" class="text-3xl font-bold text-blue-900">0</p>
-        <p class="mt-2 text-xs text-gray-500">
-            <i class="fa-solid fa-arrows-rotate mr-1" aria-hidden="true"></i>
-            Mis à jour automatiquement
-        </p>
+                </div>
+
+                <section class="mt-6 rounded-xl border border-blue-100 bg-white p-5 shadow-sm"
+                    aria-labelledby="course-fill-title">
+                    <div class="mb-4 flex flex-wrap items-end justify-between gap-2">
+                        <div>
+                            <h2 id="course-fill-title" class="text-lg font-bold text-blue-900">Taux de remplissage par
+                                cours</h2>
+                            <p class="mt-1 text-sm text-gray-500">Élèves inscrits par rapport à la capacité de 15 élèves
+                                par groupe.</p>
+                        </div>
+                        <span class="text-xs font-medium text-gray-500">0 à 15 élèves</span>
+                    </div>
+                    <div id="course-fill-rates" class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3" aria-live="polite">
+                    </div>
+                </section>
+
+
+            </section>
+        </main>
     </div>
-
-    <div class="rounded-xl border border-green-100 bg-white p-5 shadow-sm transition hover:shadow-md">
-        <div class="mb-4 flex items-center justify-between">
-            <h2 class="text-sm font-medium text-gray-600">
-                Recettes encaissées
-            </h2>
-            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-green-50 text-green-600">
-                <i class="fa-solid fa-wallet text-lg" aria-hidden="true"></i>
-            </span>
-        </div>
-        <p class="text-3xl font-bold text-green-700">
-            <span id="totale_manton">0</span>
-            <span class="text-base font-semibold">DH</span>
-        </p>
-        <p class="mt-2 text-xs text-gray-500">
-            <i class="fa-solid fa-circle-check mr-1" aria-hidden="true"></i>
-            Inscriptions payées uniquement
-        </p>
-    </div>
-
-    <div class="rounded-xl border border-amber-100 bg-white p-5 shadow-sm transition hover:shadow-md">
-        <div class="mb-4 flex items-center justify-between">
-            <h2 class="text-sm font-medium text-gray-600">
-                Inscriptions en attente
-            </h2>
-            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
-                <i class="fa-solid fa-clock text-lg" aria-hidden="true"></i>
-            </span>
-        </div>
-        <p id="attente" class="text-3xl font-bold text-amber-600">0</p>
-        <p class="mt-2 text-xs text-gray-500">
-            <i class="fa-solid fa-hourglass-half mr-1" aria-hidden="true"></i>
-            Statut : En attente
-        </p>
-    </div>
-
-    <div class="rounded-xl border border-emerald-100 bg-white p-5 shadow-sm transition hover:shadow-md">
-        <div class="mb-4 flex items-center justify-between">
-            <h2 class="text-sm font-medium text-gray-600">
-                Inscriptions payées
-            </h2>
-            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
-                <i class="fa-solid fa-check-double text-lg" aria-hidden="true"></i>
-            </span>
-        </div>
-        <p id="payee" class="text-3xl font-bold text-emerald-700">0</p>
-        <p class="mt-2 text-xs text-gray-500">
-            <i class="fa-solid fa-shield-check mr-1" aria-hidden="true"></i>
-            Statut : Payée
-        </p>
-    </div>
-
-</main>
-
-        
-        </section>
-    </main>
     <footer></footer>
     <script type="module" src="script.js"></script>
 </body>
